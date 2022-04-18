@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.gibr.BashGitBranchDelete import BashGitBranchDelete
 from gitbro.gibr.BashGitBranchList import BashGitBranchList
 from gitbro.gibr.BashGitBranchNew import BashGitBranchNew
 from gitbro.gibr.BashGitBranchSet import BashGitBranchSet
@@ -23,6 +24,14 @@ class Command:
     def __run_options(self):
         if self.options[0] == '-n':
             BashGitBranchNew.go(self.options, self.values)
+        elif self.options[0] == '-d':
+            BashGitBranchDelete.go(self.options, self.values)
+        elif self.options[0] == '-g':
+            print('track a branch by a partial string')
+        elif self.options[0] == '-r':
+            print('track the last used branch and return to it')
+        else:
+            print('this option is not mapped (yet)')
 
     def __run_values(self):
         BashGitBranchSet.go(self.options, self.values)
