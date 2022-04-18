@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gitbro',
-    version='0.2.0',
+    version='0.3.0',
     description='A bunch of handy commands to do things a bit faster using git command line (imho)',
     url='http://github.com/rafaelucena/gitbro',
     author='Rafael Boszko',
@@ -13,6 +13,7 @@ setup(
         console_scripts=[
             'gitbro=gitbro.mock.main:run',
             'gist=gitbro.gist.main:run',
+            'gibr=gitbro.gibr.main:run',
         ]
     )
 )
