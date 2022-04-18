@@ -1,5 +1,6 @@
 import os
 from gitbro.abc.Arguments import Arguments
+from gitbro.gibr.BashGitNewBranch import BashGitNewBranch
 from gitbro.gibr.BashGitSetBranch import BashGitSetBranch
 
 class Command:
@@ -11,8 +12,6 @@ class Command:
         self.options = arguments.get_options()
         self.values = arguments.get_values()
 
-        # print(self.options)
-
     def run(self):
         if len(self.options) > 0:
             self.__run_options()
@@ -23,8 +22,7 @@ class Command:
 
     def __run_options(self):
         if self.options[0] == '-n':
-            print('git checkout -b {target}'.format(target=self.values[0]))
-            os.system('git checkout -b {target}'.format(target=self.values[0]))
+            BashGitNewBranch.go(self.options, self.values)
 
     def __run_values(self):
         BashGitSetBranch.go(self.options, self.values)
