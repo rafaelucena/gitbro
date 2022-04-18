@@ -1,5 +1,6 @@
 import os
 from gitbro.abc.Arguments import Arguments
+from gitbro.gibr.BashGitSetBranch import BashGitSetBranch
 
 class Command:
     options: list = []
@@ -26,8 +27,7 @@ class Command:
             os.system('git checkout -b {target}'.format(target=self.values[0]))
 
     def __run_values(self):
-        print('git checkout {target}'.format(target=self.values[0]))
-        os.system('git checkout {target}'.format(target=self.values[0]))
+        BashGitSetBranch.go(self.options, self.values)
 
     def __run_default(self):
         print('git branch')
