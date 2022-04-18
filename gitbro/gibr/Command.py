@@ -1,5 +1,6 @@
 from gitbro.abc.Arguments import Arguments
 from gitbro.gibr.BashGitBranchDelete import BashGitBranchDelete
+from gitbro.gibr.BashGitBranchKill import BashGitBranchKill
 from gitbro.gibr.BashGitBranchList import BashGitBranchList
 from gitbro.gibr.BashGitBranchNew import BashGitBranchNew
 from gitbro.gibr.BashGitBranchSet import BashGitBranchSet
@@ -26,6 +27,8 @@ class Command:
             BashGitBranchNew.go(self.options, self.values)
         elif self.options[0] == '-d':
             BashGitBranchDelete.go(self.options, self.values)
+        elif self.options[0] == '-k':
+            BashGitBranchKill.go(self.options, self.values)
         elif self.options[0] == '-g':
             print('track a branch by a partial string')
         elif self.options[0] == '-r':

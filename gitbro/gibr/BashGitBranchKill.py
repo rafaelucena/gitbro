@@ -1,11 +1,11 @@
 import os
 
-class BashGitBranchDelete:
+class BashGitBranchKill:
     line: str = '{base} {action} {target}' # @todo - ":extras:"
     base: str = 'git'
-    action: str = 'checkout -D'
+    action: str = 'push origin --delete'
     target: str = ''
-    question: str = 'Are you sure you want to delete {target}? (Yy|Nn)'
+    question: str = 'The branch {target} will be removed from the remote, are you sure? (Yy|Nn)'
 
     def __init__(self, options: list = [], values: list = []) -> None:
         command = self.__map_command(options, values)
@@ -32,4 +32,4 @@ class BashGitBranchDelete:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitBranchDelete(options, values)
+        BashGitBranchKill(options, values)
