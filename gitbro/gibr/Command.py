@@ -1,7 +1,7 @@
 import os
 from gitbro.abc.Arguments import Arguments
-from gitbro.gibr.BashGitNewBranch import BashGitNewBranch
-from gitbro.gibr.BashGitSetBranch import BashGitSetBranch
+from gitbro.gibr.BashGitBranchNew import BashGitBranchNew
+from gitbro.gibr.BashGitBranchSet import BashGitBranchSet
 
 class Command:
     options: list = []
@@ -22,10 +22,10 @@ class Command:
 
     def __run_options(self):
         if self.options[0] == '-n':
-            BashGitNewBranch.go(self.options, self.values)
+            BashGitBranchNew.go(self.options, self.values)
 
     def __run_values(self):
-        BashGitSetBranch.go(self.options, self.values)
+        BashGitBranchSet.go(self.options, self.values)
 
     def __run_default(self):
         print('git branch')
