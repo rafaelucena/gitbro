@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='gitbro',
@@ -8,9 +8,10 @@ setup(
     author='Rafael Boszko',
     author_email='rafael.boszko@gmail.com',
     license='MIT',
+    packages=find_packages(),
     entry_points=dict(
         console_scripts=[
-            'test=gitbro.mock.main:run'
+            'gitbro=gitbro.mock.main:run'
         ]
     )
 )
