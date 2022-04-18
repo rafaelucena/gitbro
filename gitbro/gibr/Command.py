@@ -1,5 +1,5 @@
-import os
 from gitbro.abc.Arguments import Arguments
+from gitbro.gibr.BashGitBranchList import BashGitBranchList
 from gitbro.gibr.BashGitBranchNew import BashGitBranchNew
 from gitbro.gibr.BashGitBranchSet import BashGitBranchSet
 
@@ -28,8 +28,7 @@ class Command:
         BashGitBranchSet.go(self.options, self.values)
 
     def __run_default(self):
-        print('git branch')
-        os.system('git branch')
+        BashGitBranchList.go(self.options, self.values)
 
 if __name__ == "__main__":
     command = Command()
