@@ -1,3 +1,4 @@
+import os
 from gitbro.abc.Arguments import Arguments
 
 class Command:
@@ -13,9 +14,24 @@ class Command:
 
     def run(self):
         if len(self.options) > 0:
-            print('evaluate options')
+            self.__run_options()
         elif len(self.values) > 0:
-            print('get to branch')
+            self.__run_values()
+        else:
+            self.__run_default()
+
+    def __run_options(self):
+        if self.options[0] == '-n':
+            print('git checkout -b {target}'.format(target=self.values[0]))
+            os.system('git checkout -b {target}'.format(target=self.values[0]))
+
+    def __run_values(self):
+        print('git checkout {target}'.format(target=self.values[0]))
+        os.system('git checkout {target}'.format(target=self.values[0]))
+
+    def __run_default(self):
+        print('git branch')
+        os.system('git branch')
 
 if __name__ == "__main__":
     command = Command()
