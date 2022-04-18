@@ -1,6 +1,6 @@
 import os
 
-class BashGitNewBranch:
+class BashGitBranchNew:
     line: str = '{base} {action} {target}' # @todo - ":extras:"
     base: str = 'git'
     action: str = 'checkout -b'
@@ -21,4 +21,4 @@ class BashGitNewBranch:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitNewBranch(options, values)
+        BashGitBranchNew(options, values)

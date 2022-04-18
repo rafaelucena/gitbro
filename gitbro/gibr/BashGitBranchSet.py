@@ -1,7 +1,6 @@
-# from termcolor import colored
 import os
 
-class BashGitSetBranch:
+class BashGitBranchSet:
     line: str = '{base} {action} {target}' # @todo - ":extras:"
     base: str = 'git'
     action: str = 'checkout'
@@ -22,4 +21,4 @@ class BashGitSetBranch:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitSetBranch(options, values)
+        BashGitBranchSet(options, values)
