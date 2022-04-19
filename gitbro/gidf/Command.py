@@ -19,7 +19,10 @@ class Command:
             self.__run_default()
 
     def __run_options(self):
-        print('this option is not mapped (yet)')
+        if self.options[0] == '-s':
+            BashGitDiffStat.go(self.options, self.values)
+        else:
+            print('this option is not mapped (yet)')
 
     def __run_values(self):
         print('find a file and show its diff')

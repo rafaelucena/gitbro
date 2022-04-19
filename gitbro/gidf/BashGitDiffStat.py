@@ -14,6 +14,9 @@ class BashGitDiffStat:
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
+        if len(values) > 0:
+            self.target = values[0]
+
         self.line = self.line.format(base=self.base, action=self.action, target=self.target)
 
         return self.line
