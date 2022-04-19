@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.gidf.BashGitDiffStat import BashGitDiffStat
 
 class Command:
     options: list = []
@@ -24,7 +25,7 @@ class Command:
         print('find a file and show its diff')
 
     def __run_default(self):
-        print('run the git diff --stat')
+        BashGitDiffStat.go(self.options, self.values)
 
 if __name__ == "__main__":
     command = Command()
