@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.gidf.BashGitDiffFile import BashGitDiffFile
 from gitbro.gidf.BashGitDiffStat import BashGitDiffStat
 
 class Command:
@@ -25,7 +26,7 @@ class Command:
             print('this option is not mapped (yet)')
 
     def __run_values(self):
-        print('find a file and show its diff')
+        BashGitDiffFile.go(self.options, self.values)
 
     def __run_default(self):
         BashGitDiffStat.go(self.options, self.values)
