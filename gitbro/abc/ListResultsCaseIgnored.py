@@ -13,6 +13,10 @@ class ListResultsCaseIgnored:
         self.search_list = subprocess.getoutput('git diff --cached --name-only')
         return self.__prepare_case_insensitive_argument_search(argument, self.search_list)
 
+    def find_untracked_files_for_add(self, argument):
+        self.search_list = subprocess.getoutput('git ls-files --others --exclude-standard')
+        return self.__prepare_case_insensitive_argument_search(argument, self.search_list)
+
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.parsed_lines = {}
         self.mapped_needles = {}

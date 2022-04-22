@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.giad.BashGitAddAnyFile import BashGitAddAnyFile
 
 class Command:
     options: list = []
@@ -21,7 +22,7 @@ class Command:
         print('this option is not mapped (yet)')
 
     def __run_values(self):
-        print('this option is not mapped (yet)')
+        BashGitAddAnyFile.go(self.options, self.values)
 
     def __run_default(self):
         print('this option is not mapped (yet)')
