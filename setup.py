@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gitbro',
-    version='0.3.0',
+    version='0.5.0',
     description='A bunch of handy commands to do things a bit faster using git command line (imho)',
     url='http://github.com/rafaelucena/gitbro',
     author='Rafael Boszko',
@@ -15,14 +15,15 @@ setup(
             'gist=gitbro.gist.main:run',
             'gibr=gitbro.gibr.main:run',
             'gidf=gitbro.gidf.main:run',
+            'giad=gitbro.giad.main:run',
         ]
     )
 )
 
 # gist - sketch done
-# gibr - partially done
-# gidf - sketch started
-# giad
+# gibr - partially done - planned: return to last used branch, show merged, allow local alias listing
+# gidf - mostly done - planned: generating patch, applying it and comparing branches/commits
+# giad - sketch started
 # gibk
 # gicm
 # gime
