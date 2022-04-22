@@ -22,6 +22,10 @@ class Command:
     def __run_options(self):
         if self.options[0] == '-s':
             BashGitDiffStat.go(self.options, self.values)
+        elif self.options[0] == '-c':
+            BashGitDiffFile.go(self.options, self.values)
+        elif self.options[0] == '-a':
+            BashGitDiffFile.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
 
