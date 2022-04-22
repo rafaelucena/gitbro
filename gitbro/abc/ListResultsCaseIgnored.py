@@ -9,6 +9,10 @@ class ListResultsCaseIgnored:
         self.search_list = subprocess.getoutput('git diff --name-only')
         return self.__prepare_case_insensitive_argument_search(argument, self.search_list)
 
+    def find_queued_files_for_diff(self, argument):
+        self.search_list = subprocess.getoutput('git diff --cached --name-only')
+        return self.__prepare_case_insensitive_argument_search(argument, self.search_list)
+
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.parsed_lines = {}
         self.mapped_needles = {}

@@ -7,7 +7,7 @@ from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 class BashGitDiffFile:
     line: str = '{base} {action} {target}' # @todo - ":extras:"
     base: str = 'git'
-    action: str = 'diff'
+    action: str = 'diff {cached}'
     target: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:
@@ -18,18 +18,32 @@ class BashGitDiffFile:
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
-        if len(values) > 0:
-            self.target = self.__prepare_diff_value(values[0])
+        if len(options) > 0 and options[0] == '-c':
+            self.action = self.action.format(cached='--cached')
+            if len(values) > 0:
+                self.target = self.__prepare_queued_diff_value(values[0])
+        else:
+            self.action = self.action.format(cached='')
+            if len(values) > 0:
+                self.target = self.__prepare_common_diff_value(values[0])
 
         self.line = self.line.format(base=self.base, action=self.action, target=self.target)
 
         return self.line
 
-    def __prepare_diff_value(self, value):
+    def __prepare_common_diff_value(self, value):
         filesList = ListResultsCaseIgnored()
-
         value = filesList.find_changed_files_for_diff(value)
 
+        return self.__prepare_value_wildcards(value)
+
+    def __prepare_queued_diff_value(self, value):
+        filesList = ListResultsCaseIgnored()
+        value = filesList.find_queued_files_for_diff(value)
+
+        return self.__prepare_value_wildcards(value)
+
+    def __prepare_value_wildcards(self, value):
         target_value = ''
         if regex.search('\.\w?', value):
             target_value = '*{file_name}'.format(file_name=value)
