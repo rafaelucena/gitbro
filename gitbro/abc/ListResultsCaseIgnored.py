@@ -17,8 +17,11 @@ class ListResultsCaseIgnored:
         self.search_list = subprocess.getoutput('git ls-files --others --exclude-standard')
         return self.__prepare_case_insensitive_argument_search(argument, self.search_list)
 
+    def find_untracked_file_for_add(self, argument):
+        self.search_list = subprocess.getoutput('git ls-files --others --exclude-standard')
+        return self.__prepare_case_insensitive_line_search(argument, self.search_list)
+
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
-        self.parsed_lines = {}
         self.mapped_needles = {}
         is_case_insensitive_argument_found = False
 
@@ -40,6 +43,19 @@ class ListResultsCaseIgnored:
 
         if is_case_insensitive_argument_found == True:
             return next(iter(self.mapped_needles))
+
+        return argument
+
+    def __prepare_case_insensitive_line_search(self, argument, search_list):
+        output_lines = self.__prepare_case_insensitive_dictionary(search_list)
+        for output_line in output_lines:
+            tracked_argument_case_sensitive = output_line.rfind(argument)
+            if tracked_argument_case_sensitive != -1:
+                return output_line
+
+            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument)
+            if tracked_argument_case_insensitive != -1:
+                return output_line
 
         return argument
 
