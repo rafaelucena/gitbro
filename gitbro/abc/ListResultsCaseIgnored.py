@@ -22,18 +22,17 @@ class ListResultsCaseIgnored:
         self.mapped_needles = {}
         is_case_insensitive_argument_found = False
 
-        for changed_line in search_list.splitlines():
-            self.parsed_lines[changed_line] = changed_line.lower()
-
-            tracked_argument_case_sensitive = changed_line.rfind(argument)
+        output_lines = self.__prepare_case_insensitive_dictionary(search_list)
+        for output_line in output_lines:
+            tracked_argument_case_sensitive = output_line.rfind(argument)
             if tracked_argument_case_sensitive != -1:
                 return argument
 
-            tracked_argument_case_insensitive = self.parsed_lines[changed_line].rfind(argument)
+            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument)
             if tracked_argument_case_insensitive != -1:
                 is_case_insensitive_argument_found = True
 
-                needle_to_map = changed_line[tracked_argument_case_insensitive:tracked_argument_case_insensitive+len(argument)]
+                needle_to_map = output_line[tracked_argument_case_insensitive:tracked_argument_case_insensitive+len(argument)]
                 if needle_to_map in self.mapped_needles:
                     self.mapped_needles[needle_to_map] += 1
                 else:
@@ -43,3 +42,11 @@ class ListResultsCaseIgnored:
             return next(iter(self.mapped_needles))
 
         return argument
+
+    def __prepare_case_insensitive_dictionary(self, output):
+        self.parsed_lines = {}
+
+        for output_line in output.splitlines():
+            self.parsed_lines[output_line] = output_line.lower()
+
+        return self.parsed_lines
