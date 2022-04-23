@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.giad.BashGitAddAllFiles import BashGitAddAllFiles
 from gitbro.giad.BashGitAddAnyFile import BashGitAddAnyFile
 from gitbro.giad.BashGitAddChangedFile import BashGitAddChangedFile
 from gitbro.giad.BashGitAddNewFile import BashGitAddNewFile
@@ -22,7 +23,7 @@ class Command:
 
     def __run_options(self):
         if self.options[0] == '-a':
-            print('this option is not mapped (yet)')
+            BashGitAddAllFiles.go(self.options, self.values)
         elif self.options[0] == '-n':
             BashGitAddNewFile.go(self.options, self.values)
         elif self.options[0] == '-i':
@@ -36,7 +37,7 @@ class Command:
         BashGitAddAnyFile.go(self.options, self.values)
 
     def __run_default(self):
-        print('this option is not mapped (yet)')
+        BashGitAddAllFiles.go(self.options, self.values)
 
 if __name__ == "__main__":
     command = Command()
