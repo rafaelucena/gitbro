@@ -16,6 +16,7 @@ setup(
             'gibr=gitbro.gibr.main:run',
             'gidf=gitbro.gidf.main:run',
             'giad=gitbro.giad.main:run',
+            'gibk=gitbro.gibk.main:run',
         ]
     )
 )
@@ -23,8 +24,8 @@ setup(
 # gist - sketch done
 # gibr - partially done - planned: return to last used branch, show merged, allow local alias listing
 # gidf - mostly done - planned: generating patch, applying it and comparing branches/commits
-# giad - sketch started
-# gibk
+# giad - mostly done - planned: option to add only the first file matching a string
+# gibk - sketch done
 # gicm
 # gime
 # gilg
