@@ -21,6 +21,10 @@ class ListResultsCaseIgnored:
         self.search_list = subprocess.getoutput('git ls-files --others --exclude-standard')
         return self.__prepare_case_insensitive_line_search(argument, self.search_list)
 
+    def find_stash_list_grouped(self, argument):
+        self.search_list = subprocess.getoutput('git stash list')
+        return self.__prepare_stash_line_search(self.search_list, argument)
+
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.mapped_needles = {}
         is_case_insensitive_argument_found = False
@@ -64,5 +68,34 @@ class ListResultsCaseIgnored:
 
         for output_line in output.splitlines():
             self.parsed_lines[output_line] = output_line.lower()
+
+        return self.parsed_lines
+
+    def __prepare_stash_line_search(self, search_list, argument, search_type = 'message'):
+        stash_list = self.__prepare_stash_list_case_insensitive_dictionary(search_list)
+
+        for stash_key in stash_list:
+            tracked_argument_case_sensitive = stash_list[stash_key]['message'].rfind(argument)
+            if tracked_argument_case_sensitive != -1:
+                return stash_list[stash_key]
+
+            tracked_argument_case_insensitive = stash_list[stash_key]['message_lower'].rfind(argument.lower())
+            if tracked_argument_case_insensitive != -1:
+                return stash_list[stash_key]
+
+    def __prepare_stash_list_case_insensitive_dictionary(self, output):
+        self.parsed_lines = {}
+
+        stash_line = []
+        for output_line in output.splitlines():
+            stash_line = output_line.split(': ')
+
+            self.parsed_lines[stash_line[0]] = {
+                'stash': stash_line[0],
+                'branch': stash_line[1],
+                'branch_lower': stash_line[1].lower(),
+                'message': stash_line[2],
+                'message_lower': stash_line[2].lower(),
+            }
 
         return self.parsed_lines
