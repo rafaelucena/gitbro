@@ -24,7 +24,7 @@ class Command:
     def __run_options(self):
         if self.options[0] == '-s':
             BashGitStashPush.go(self.options, self.values)
-        if self.options[0] == '-c':
+        elif self.options[0] == '-c':
             BashGitStashBoom.go(self.options, self.values)
         elif self.options[0] == '-l':
             BashGitStashList.go(self.options, self.values)
