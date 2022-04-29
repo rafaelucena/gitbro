@@ -1,13 +1,13 @@
 # GITBRO - Welcome
 
-Foobar is a Python library for dealing with word pluralization.
+Gitbro is a Python library for dealing with git commands.
 
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
 ```bash
-pip install foobar
+pip install gitbro
 ```
 
 ## #gist - short for 'git status'
