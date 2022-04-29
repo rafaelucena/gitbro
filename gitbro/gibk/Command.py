@@ -2,6 +2,7 @@ from gitbro.abc.Arguments import Arguments
 from gitbro.gibk.BashGitStashApply import BashGitStashApply
 from gitbro.gibk.BashGitStashBoom import BashGitStashBoom
 from gitbro.gibk.BashGitStashList import BashGitStashList
+from gitbro.gibk.BashGitStashPop import BashGitStashPop
 from gitbro.gibk.BashGitStashPush import BashGitStashPush
 
 class Command:
@@ -22,13 +23,15 @@ class Command:
             self.__run_default()
 
     def __run_options(self):
-        if self.options[0] == '-s':
+        if self.options[0] == '-s': #save|push
             BashGitStashPush.go(self.options, self.values)
-        elif self.options[0] == '-c':
+        elif self.options[0] == '-c': #clear
             BashGitStashBoom.go(self.options, self.values)
-        elif self.options[0] == '-l':
+        elif self.options[0] == '-l': #list
             BashGitStashList.go(self.options, self.values)
-        elif self.options[0] == '-g':
+        elif self.options[0] == '-p': #pop
+            BashGitStashPop.go(self.options, self.values)
+        elif self.options[0] == '-g': #grep
             BashGitStashApply.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')

@@ -3,7 +3,7 @@ import os
 class BashGitStashPush:
     line: str = '{base} {action} {target}' # @todo - ":extras:"
     base: str = 'git'
-    action: str = 'stash push'
+    action: str = 'stash push -m'
     target: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:

@@ -15,7 +15,7 @@ class BashGitStashBoom:
             return
 
         print(command)
-        # os.system(command)
+        os.system(command)
 
     def __confirm_just_in_case(self):
         answer = input(self.question.format(amount=5))
