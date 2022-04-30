@@ -1,6 +1,7 @@
 from gitbro.abc.Arguments import Arguments
 from gitbro.gibk.BashGitStashApply import BashGitStashApply
 from gitbro.gibk.BashGitStashBoom import BashGitStashBoom
+from gitbro.gibk.BashGitStashDrop import BashGitStashDrop
 from gitbro.gibk.BashGitStashList import BashGitStashList
 from gitbro.gibk.BashGitStashPop import BashGitStashPop
 from gitbro.gibk.BashGitStashPush import BashGitStashPush
@@ -27,6 +28,10 @@ class Command:
             BashGitStashPush.go(self.options, self.values)
         elif self.options[0] == '-c': #clear
             BashGitStashBoom.go(self.options, self.values)
+        elif self.options[0] == '-d': #drop
+            BashGitStashDrop.go(self.options, self.values)
+        elif self.options[0] == '-a': #apply
+            BashGitStashApply.go(self.options, self.values)
         elif self.options[0] == '-l': #list
             BashGitStashList.go(self.options, self.values)
         elif self.options[0] == '-p': #pop
