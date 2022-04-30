@@ -1,21 +1,26 @@
 import os
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
-class BashGitStashApply:
+class BashGitStashView:
     line: str = '{base} {action} {target} {comment}' # TODO: ":extras:"
     base: str = 'git'
-    action: str = 'stash apply'
+    action: str = 'stash show {patch}'
     target: str = 'stash@{{{index}}}'
     comment: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:
         command = self.__map_command(options, values)
 
-        # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
+        # TODO: - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
+        if (len(options) > 0 and options[0] == '-v'):
+            self.action = self.action.format(patch='-p')
+        else:
+            self.action = self.action.format(patch='')
+
         if (len(options) > 0 and options[0] == '-g') or (len(options) > 1 and options[1] == '-g'):
             list_helper = ListResultsCaseIgnored()
             stashed_item = list_helper.find_stash_list_grouped(values[0])
@@ -30,4 +35,4 @@ class BashGitStashApply:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitStashApply(options, values)
+        BashGitStashView(options, values)
