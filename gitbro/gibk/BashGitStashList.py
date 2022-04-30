@@ -1,7 +1,7 @@
 import os
 
 class BashGitStashList:
-    line: str = '{base} {action} {pretty} {target}' # @todo - ":extras:"
+    line: str = '{base} {action} {pretty} {target}' # TODO: - ":extras:"
     base: str = 'git'
     action: str = 'stash list'
     pretty: str = '--pretty=format:"%gd: %<(70,trunc)%s: %C(green)(%cr)%C(reset)"'
@@ -10,7 +10,7 @@ class BashGitStashList:
     def __init__(self, options: list = [], values: list = []) -> None:
         command = self.__map_command(options, values)
 
-        # @todo - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
+        # TODO: - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
         os.system(command)
 

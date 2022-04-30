@@ -2,7 +2,7 @@ import os
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
 class BashGitStashPop:
-    line: str = '{base} {action} {target} {comment}' # @todo - ":extras:"
+    line: str = '{base} {action} {target} {comment}' # TODO: - ":extras:"
     base: str = 'git'
     action: str = 'stash pop'
     target: str = 'stash@{{{index}}}'
@@ -11,7 +11,7 @@ class BashGitStashPop:
     def __init__(self, options: list = [], values: list = []) -> None:
         command = self.__map_command(options, values)
 
-        # @todo - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
+        # TODO: - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
         os.system(command)
 
