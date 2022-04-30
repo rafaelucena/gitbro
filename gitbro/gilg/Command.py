@@ -1,7 +1,7 @@
 import re as regex
 
 from gitbro.abc.Arguments import Arguments
-from gitbro.gilg.BashGitLogRange import BashGitLogRange
+from gitbro.gilg.BashGitLogList import BashGitLogList
 
 class Command:
     options: list = []
@@ -22,14 +22,14 @@ class Command:
 
     def __run_options(self):
         if regex.search('^-(\d+)', self.options[0]): #logs
-            BashGitLogRange.go(self.options, self.values)
+            BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-p': #pretty
-            BashGitLogRange.go(self.options, self.values)
+            BashGitLogList.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
 
     def __run_values(self):
-        BashGitLogRange.go(self.options, self.values)
+        BashGitLogList.go(self.options, self.values)
 
     def __run_default(self):
         print('default is not mapped (yet)')
