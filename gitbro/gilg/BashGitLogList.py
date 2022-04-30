@@ -1,8 +1,6 @@
 import os
 
-from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
-
-class BashGitLogRange:
+class BashGitLogList:
     line: str = '{base} {action} {target} {format}' # TODO: ":extras:"
     base: str = 'git'
     action: str = 'log'
@@ -31,4 +29,4 @@ class BashGitLogRange:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitLogRange(options, values)
+        BashGitLogList(options, values)
