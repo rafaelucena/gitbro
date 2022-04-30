@@ -29,7 +29,6 @@ class Arguments:
                 self.values.append(command_argument)
 
     def __is_option(self, command_argument: str):
-        print(command_argument)
         self.matched = regex.search('^-(\w+)', command_argument)
         return self.matched
 
