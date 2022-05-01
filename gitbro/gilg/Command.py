@@ -21,9 +21,19 @@ class Command:
             self.__run_default()
 
     def __run_options(self):
-        if regex.search('^-(\d+)', self.options[0]): #logs
+        if regex.search('^-(\d+)', self.options[0]): #list
             BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-p': #pretty
+            BashGitLogList.go(self.options, self.values)
+        elif self.options[0] == '-g': #grep
+            BashGitLogList.go(self.options, self.values)
+        elif self.options[0] == '-e': #exclude
+            BashGitLogList.go(self.options, self.values)
+        elif self.options[0] == '-c': #chart
+            BashGitLogList.go(self.options, self.values)
+        elif self.options[0] == '-d': #diff
+            BashGitLogList.go(self.options, self.values)
+        elif self.options[0] == '-o': #diff
             BashGitLogList.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
