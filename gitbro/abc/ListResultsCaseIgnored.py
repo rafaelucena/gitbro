@@ -25,6 +25,10 @@ class ListResultsCaseIgnored:
         self.search_list = subprocess.getoutput('git stash list')
         return self.__prepare_stash_line_search(self.search_list, argument)
 
+    def find_branch_by_partial(self, argument):
+        self.search_list = subprocess.getoutput('git branch --no-contains')
+        return self.__prepare_branch_line_search(self.search_list, argument)
+
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.mapped_needles = {}
         is_case_insensitive_argument_found = False
@@ -35,7 +39,7 @@ class ListResultsCaseIgnored:
             if tracked_argument_case_sensitive != -1:
                 return argument
 
-            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument)
+            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument.lower())
             if tracked_argument_case_insensitive != -1:
                 is_case_insensitive_argument_found = True
 
@@ -71,7 +75,7 @@ class ListResultsCaseIgnored:
 
         return self.parsed_lines
 
-    def __prepare_stash_line_search(self, search_list, argument, search_type = 'message'):
+    def __prepare_stash_line_search(self, search_list, argument, search_type = 'message'): # TODO: allow stash search by branch
         stash_list = self.__prepare_stash_list_case_insensitive_dictionary(search_list)
 
         for stash_key in stash_list:
@@ -99,3 +103,17 @@ class ListResultsCaseIgnored:
             }
 
         return self.parsed_lines
+
+    def __prepare_branch_line_search(self, search_list, argument):
+        output_lines = self.__prepare_case_insensitive_dictionary(search_list)
+
+        for output_line in output_lines:
+            tracked_argument_case_sensitive = output_line.rfind(argument)
+            if tracked_argument_case_sensitive != -1:
+                return output_line
+
+            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument.lower())
+            if tracked_argument_case_insensitive != -1:
+                return output_line
+
+        return argument

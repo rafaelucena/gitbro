@@ -1,6 +1,8 @@
 import os
 import re as regex
 
+from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
+
 class BashGitLogList:
     line: str = '{base} {action} {format} {target}' # TODO: ":extras:"
     base: str = 'git'
@@ -20,8 +22,14 @@ class BashGitLogList:
             self.action = self.action.format(grep='-i --grep={0}'.format(values[0]))
         elif '-e' in options and len(values) > 0: #exclude
             self.action = self.action.format(grep='-i --grep={0} --invert-grep'.format(values[0]))
-        elif '-c' in options and len(values) > 0: #compare
-            self.action = self.action.format(grep='{0}..'.format(values[0]))
+        elif '-c' in options: #compare
+            listResults = ListResultsCaseIgnored()
+
+            found = 'master'
+            if (len(values) > 0):
+                found = listResults.find_branch_by_partial(values[0])
+
+            self.action = self.action.format(grep='{0}..'.format(found))
         else:
             self.action = self.action.format(grep='')
 
