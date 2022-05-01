@@ -1,11 +1,12 @@
 import os
+import re as regex
 
 class BashGitLogList:
-    line: str = '{base} {action} {target} {format}' # TODO: ":extras:"
+    line: str = '{base} {action} {format} {target}' # TODO: ":extras:"
     base: str = 'git'
-    action: str = 'log'
+    action: str = 'log {grep}'
     format: str = ''
-    target: str = '-{results}'
+    target: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:
         command = self.__map_command(options, values)
@@ -15,11 +16,24 @@ class BashGitLogList:
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
-        if (len(options) > 0 and options[0] == '-p') or (len(options) > 1 and options[1] == '-p'):
-            self.format = "--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'"
+        if ('-g' in options or len(options) == 0) and len(values) > 0: #grep
+            self.action = self.action.format(grep='-i --grep={0}'.format(values[0]))
+        elif '-e' in options and len(values) > 0: #exclude
+            self.action = self.action.format(grep='-i --grep={0} --invert-grep'.format(values[0]))
+        else:
+            self.action = self.action.format(grep='')
 
-        if len(values) > 0:
-            self.target = self.target.format(results=values[0])
+        if '-p' in options: #pretty
+            self.format = "--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'"
+        elif '-c' in options: #chart
+            self.format = '--graph'
+        elif '-d' in options: #diff
+            self.format = '--patch-with-stat'
+        elif '-o' in options: #oneline
+            self.format = '--oneline'
+
+        if len(options) > 0 and regex.search('^-(\d+)', options[0]): #list
+            self.target = options[0]
         else:
             self.target = ''
 

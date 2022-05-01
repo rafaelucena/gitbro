@@ -20,9 +20,7 @@ class Arguments:
                 continue
 
             if self.__is_option_numeric(command_argument):
-                self.options.append(command_argument)
-                found = self.matched.group()
-                self.values.append(found.replace('-', ''))
+                self.options.insert(0, command_argument)
             elif self.__is_option(command_argument):
                 self.options.append(command_argument)
             else:
