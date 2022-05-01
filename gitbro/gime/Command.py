@@ -21,6 +21,8 @@ class Command:
     def __run_options(self):
         if self.options[0] == '-l': #last
             BashGitMergeBranch.go(self.options, self.values)
+        elif self.options[0] == '-n': #no-verify
+            BashGitMergeBranch.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
 
