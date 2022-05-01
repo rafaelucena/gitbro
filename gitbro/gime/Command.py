@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.gime.BashGitMergeBranch import BashGitMergeBranch
 
 class Command:
     options: list = []
@@ -18,10 +19,13 @@ class Command:
             self.__run_default()
 
     def __run_options(self):
-        print('this option is not mapped (yet)')
+        if self.options[0] == '-l': #last
+            BashGitMergeBranch.go(self.options, self.values)
+        else:
+            print('this option is not mapped (yet)')
 
     def __run_values(self):
-        print('this value is not mapped (yet)')
+        BashGitMergeBranch.go(self.options, self.values)
 
     def __run_default(self):
         print('default is not mapped (yet)')
