@@ -23,13 +23,15 @@ class Command:
     def __run_options(self):
         if regex.search('^-(\d+)', self.options[0]): #list
             BashGitLogList.go(self.options, self.values)
+        elif self.options[0] == '-c': #compare
+            BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-p': #pretty
             BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-g': #grep
             BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-e': #exclude
             BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-c': #chart
+        elif self.options[0] == '-t': #traces
             BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-d': #diff
             BashGitLogList.go(self.options, self.values)

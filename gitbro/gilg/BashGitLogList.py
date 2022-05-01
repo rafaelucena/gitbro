@@ -20,12 +20,14 @@ class BashGitLogList:
             self.action = self.action.format(grep='-i --grep={0}'.format(values[0]))
         elif '-e' in options and len(values) > 0: #exclude
             self.action = self.action.format(grep='-i --grep={0} --invert-grep'.format(values[0]))
+        elif '-c' in options and len(values) > 0: #compare
+            self.action = self.action.format(grep='{0}..'.format(values[0]))
         else:
             self.action = self.action.format(grep='')
 
         if '-p' in options: #pretty
             self.format = "--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'"
-        elif '-c' in options: #chart
+        elif '-t' in options: #traces
             self.format = '--graph'
         elif '-d' in options: #diff
             self.format = '--patch-with-stat'
