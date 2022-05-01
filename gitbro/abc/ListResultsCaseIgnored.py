@@ -1,3 +1,4 @@
+import re as regex
 import subprocess
 
 class ListResultsCaseIgnored:
@@ -28,6 +29,10 @@ class ListResultsCaseIgnored:
     def find_branch_by_partial(self, argument):
         self.search_list = subprocess.getoutput('git branch --no-contains')
         return self.__prepare_branch_line_search(self.search_list, argument)
+
+    def find_last_branch_by_reflog(self):
+        self.search_list = subprocess.getoutput("git reflog -1 --grep-reflog=checkout --pretty=format:'%gs'")
+        return self.__prepare_branch_reflog_line(self.search_list)
 
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.mapped_needles = {}
@@ -117,3 +122,25 @@ class ListResultsCaseIgnored:
                 return output_line
 
         return argument
+
+    def __prepare_branch_reflog_line(self, search_list):
+        output_line = self.__prepare_reflog_list_case_insensitive_dictionary(search_list)
+        return output_line['source']
+
+    def __prepare_reflog_list_case_insensitive_dictionary(self, output):
+        self.parsed_lines = {}
+
+        reflog_line = []
+        for output_line in output.splitlines():
+            reflog_line = output_line.split(': ')
+            matched = regex.search('^moving from (.+) to (.+)$', reflog_line[1])
+
+            return  {
+                'acti': reflog_line[0],
+                'source': matched[1],
+                'source_lower': matched[1].lower(),
+                'destination': matched[2],
+                'destination_lower': matched[2].lower(),
+            }
+
+        return {}
