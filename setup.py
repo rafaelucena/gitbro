@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gitbro',
-    version='0.7.0',
+    version='0.8.0',
     description='A bunch of handy commands to do things a bit faster using git command line (imho)',
     url='http://github.com/rafaelucena/gitbro',
     author='Rafael Boszko',
@@ -18,6 +18,7 @@ setup(
             'giad=gitbro.giad.main:run',
             'gibk=gitbro.gibk.main:run',
             'gilg=gitbro.gilg.main:run',
+            'gime=gitbro.gime.main:run',
         ]
     )
 )
@@ -28,8 +29,8 @@ setup(
 # giad - mostly done - planned: option to add only the first file matching a string
 # gibk - mostly done - planned: show a brief description of a stash when using the index as well
 # gilg - mostly done - planned: compare before/after, add by author
+# gime - sketch done
 # gicm
-# gime
 # gicp - planned
 # girs - planned
 # gire - planned
