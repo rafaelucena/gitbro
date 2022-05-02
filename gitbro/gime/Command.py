@@ -1,4 +1,5 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.gime.BashGitMergeActions import BashGitMergeActions
 from gitbro.gime.BashGitMergeBranch import BashGitMergeBranch
 
 class Command:
@@ -21,17 +22,23 @@ class Command:
     def __run_options(self):
         if self.__run_options_base_flow(self.options): #base flow
             BashGitMergeBranch.go(self.options, self.values)
+        elif self.__run_options_actions_flow(self.options): #actions flow
+            BashGitMergeActions.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
 
     def __run_options_base_flow(self, options):
         if options[0] == '-l': #last
             return True
-        elif self.options[0] == '-i': #no-edit (skip editing commit)
+
+        return False
+
+    def __run_options_actions_flow(self, options):
+        if options[0] == '-a': #abort
             return True
-        elif self.options[0] == '-q': #quiet
+        elif self.options[0] == '-c': #continue
             return True
-        elif self.options[0] == '-n': #no-verify (skip git hooks)
+        elif self.options[0] == '-q': #quit
             return True
 
         return False
