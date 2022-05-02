@@ -19,12 +19,22 @@ class Command:
             self.__run_default()
 
     def __run_options(self):
-        if self.options[0] == '-l': #last
-            BashGitMergeBranch.go(self.options, self.values)
-        elif self.options[0] == '-n': #no-verify
+        if self.__run_options_base_flow(self.options): #base flow
             BashGitMergeBranch.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
+
+    def __run_options_base_flow(self, options):
+        if options[0] == '-l': #last
+            return True
+        elif self.options[0] == '-i': #no-edit (skip editing commit)
+            return True
+        elif self.options[0] == '-q': #quiet
+            return True
+        elif self.options[0] == '-n': #no-verify (skip git hooks)
+            return True
+
+        return False
 
     def __run_values(self):
         BashGitMergeBranch.go(self.options, self.values)
