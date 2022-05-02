@@ -5,16 +5,16 @@ import re as regex
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
 class BashGitMergeBranch:
-    line: str = '{base} {action} {flags} {target}' # @todo - ":extras:"
+    line: str = '{base} {action} {flags} {target}' # TODO: ":extras:"
     base: str = 'git'
     action: str = 'merge'
-    flags: str = ''
+    flags: list = []
     target: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:
         command = self.__map_command(options, values)
 
-        # @todo - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
+        # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
         os.system(command)
 
@@ -25,7 +25,7 @@ class BashGitMergeBranch:
         if len(options) > 0:
             self.__map_command_options(options)
 
-        self.line = self.line.format(base=self.base, action=self.action, flags=self.flags, target=self.target)
+        self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
         return self.line
 
@@ -33,8 +33,12 @@ class BashGitMergeBranch:
         if '-l' == options[0]:
             self.target = self.__prepare_last_branch_value()
 
-        if '-n' in options:
-            self.flags = '--no-verify'
+        if '-i' in options: #ignore (skip editing commit)
+            self.flags.append('--no-edit')
+        if '-q' in options: #quiet
+            self.flags.append('--quiet')
+        if '-n' in options: #no-verify (skip git hooks)
+            self.flags.append('--no-verify')
 
     def __map_command_values(self, values):
         self.target = values[0]
