@@ -1,6 +1,4 @@
-import subprocess
 import os
-import re as regex
 
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
@@ -23,20 +21,30 @@ class BashGitMergeBranch:
             self.__map_command_values(values)
 
         if len(options) > 0:
-            self.__map_command_options(options)
+            self.__map_command_options(options, values)
 
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
         return self.line
 
-    def __map_command_options(self, options):
-        if '-l' == options[0]:
+    def __map_command_options(self, options, values):
+        if '-l' == options[0] and len(values) == 0:
             self.target = self.__prepare_last_branch_value()
 
-        if '-i' in options: #ignore (skip editing commit)
+        if '-r' in options: #read-only (skip editing commit)
             self.flags.append('--no-edit')
-        if '-q' in options: #quiet
+        elif '-w' in options: #write (skip editing commit)
+            self.flags.append('--edit')
+
+        if '-s' in options: #stat
+            self.flags.append('--stat')
+        elif '-q' in options: #quiet
             self.flags.append('--quiet')
+
+        if '-d' in options: #dry-run
+            self.flags.append('--no-commit')
+            self.flags.append('--no-ff')
+
         if '-n' in options: #no-verify (skip git hooks)
             self.flags.append('--no-verify')
 
