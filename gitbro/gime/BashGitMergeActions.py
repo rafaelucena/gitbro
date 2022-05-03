@@ -14,7 +14,7 @@ class BashGitMergeActions:
 
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
-        # os.system(command)
+        os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
         if len(options) > 0:
