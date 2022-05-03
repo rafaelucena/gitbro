@@ -77,7 +77,7 @@ class BashGitMergeBranch:
 
     def __prepare_grep_branch_value(self, values: list) -> str:
         branchesList = ListResultsCaseIgnored()
-        value = branchesList.find_first_branch_by_partial(values[0])
+        value = branchesList.find_branch_by_partial(values[0])
 
         return value
 

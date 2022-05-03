@@ -28,16 +28,12 @@ class ListResultsCaseIgnored:
         return self.__prepare_stash_line_search(self.command_output, argument)
 
     def find_branch_by_partial(self, argument):
-        self.command_output = subprocess.getoutput('git branch --no-contains')
-        return self.__prepare_branch_line_search(self.command_output, argument)
+        self.command_output = subprocess.getoutput('git branch -l --no-contains')
+        return self.__prepare_case_insensitive_line_search(self.command_output, argument)
 
     def find_last_branch_by_reflog(self):
         self.command_output = subprocess.getoutput("git reflog -1 --grep-reflog=checkout --pretty=format:'%gs'")
         return self.__prepare_branch_reflog_line(self.command_output)
-
-    def find_first_branch_by_partial(self, argument):
-        self.command_output = subprocess.getoutput('git branch -l --no-contains')
-        return self.__prepare_case_insensitive_line_search(self.command_output, argument)
 
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.mapped_needles = {}
@@ -113,20 +109,6 @@ class ListResultsCaseIgnored:
             }
 
         return self.parsed_lines
-
-    def __prepare_branch_line_search(self, search_list, argument):
-        output_lines = self.__prepare_case_insensitive_dictionary(search_list)
-
-        for output_line in output_lines:
-            tracked_argument_case_sensitive = output_line.rfind(argument)
-            if tracked_argument_case_sensitive != -1:
-                return output_line
-
-            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument.lower())
-            if tracked_argument_case_insensitive != -1:
-                return output_line
-
-        return argument
 
     def __prepare_branch_reflog_line(self, search_list):
         output_line = self.__prepare_reflog_list_case_insensitive_dictionary(search_list)
