@@ -4,6 +4,7 @@ import sys as system
 class Arguments:
     options: list = []
     values: list = []
+    matched: None
 
     def __init__(self) -> None:
         if (len(system.argv) <= 1):
@@ -14,17 +15,24 @@ class Arguments:
     def __define_options(self, command_arguments: enumerate):
         count = 0
         for i, command_argument in command_arguments:
-            if (count == 0):
+            if count == 0:
                 count += 1
                 continue
 
-            if (self.__is_option(command_argument)):
+            if self.__is_option_numeric(command_argument):
+                self.options.insert(0, command_argument)
+            elif self.__is_option(command_argument):
                 self.options.append(command_argument)
             else:
                 self.values.append(command_argument)
 
     def __is_option(self, command_argument: str):
-        return regex.search('^-\w+', command_argument)
+        self.matched = regex.search('^-(\w+)', command_argument)
+        return self.matched
+
+    def __is_option_numeric(self, command_argument: str):
+        self.matched = regex.search('^-(\d+)', command_argument)
+        return self.matched
 
     def get_options(self, index: int = None):
         if (index is not None):
