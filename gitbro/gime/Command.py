@@ -11,7 +11,7 @@ class Command:
         self.options = arguments.get_options()
         self.values = arguments.get_values()
 
-    def run(self):
+    def run(self) -> None:
         if len(self.options) > 0:
             self.__run_options(self.options, self.values)
         elif len(self.values) > 0:
@@ -19,7 +19,7 @@ class Command:
         else:
             self.__run_default(self.options, self.values)
 
-    def __run_options(self, options: list, values: list):
+    def __run_options(self, options: list, values: list) -> None:
         if self.__run_options_base_flow(options): #base flow
             BashGitMergeBranch.go(options, values)
         elif self.__run_options_actions_flow(options): #actions flow
@@ -27,10 +27,10 @@ class Command:
         else:
             print('this option is not mapped (yet)')
 
-    def __run_values(self, options: list, values: list):
+    def __run_values(self, options: list, values: list) -> None:
         BashGitMergeBranch.go(options, values)
 
-    def __run_default(self, options: list, values: list):
+    def __run_default(self, options: list, values: list) -> None:
         BashGitMergeBranch.go(options, values) #master
 
     def __run_options_base_flow(self, options: list) -> bool:
