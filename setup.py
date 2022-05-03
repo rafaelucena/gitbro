@@ -14,6 +14,19 @@ setup(
             'gitbro=gitbro.mock.main:run',
             'gist=gitbro.gist.main:run',
             'gibr=gitbro.gibr.main:run',
+            'gidf=gitbro.gidf.main:run',
         ]
     )
 )
+
+# gist - sketch done
+# gibr - partially done
+# gidf - sketch started
+# giad
+# gibk
+# gicm
+# gime
+# gilg
+# gicp - planned
+# girs - planned
+# gire - planned
