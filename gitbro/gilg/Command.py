@@ -31,11 +31,11 @@ class Command:
             BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-e': #exclude
             BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-t': #traces
+        elif self.options[0] == '-r': #roadmap
             BashGitLogList.go(self.options, self.values)
         elif self.options[0] == '-d': #diff
             BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-o': #diff
+        elif self.options[0] == '-o': #oneline
             BashGitLogList.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
@@ -44,7 +44,7 @@ class Command:
         BashGitLogList.go(self.options, self.values)
 
     def __run_default(self):
-        print('default is not mapped (yet)')
+        BashGitLogList.go(self.options, self.values)
 
 if __name__ == "__main__":
     command = Command()

@@ -4,10 +4,10 @@ import re as regex
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
 class BashGitLogList:
-    line: str = '{base} {action} {format} {target}' # TODO: ":extras:"
+    line: str = '{base} {action} {flags} {target}' # TODO: ":extras:"
     base: str = 'git'
-    action: str = 'log {grep}'
-    format: str = ''
+    action: str = 'log'
+    flags: list = []
     target: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:
@@ -18,38 +18,50 @@ class BashGitLogList:
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
-        if ('-g' in options or len(options) == 0) and len(values) > 0: #grep
-            self.action = self.action.format(grep='-i --grep={0}'.format(values[0]))
-        elif '-e' in options and len(values) > 0: #exclude
-            self.action = self.action.format(grep='-i --grep={0} --invert-grep'.format(values[0]))
-        elif '-c' in options: #compare
-            listResults = ListResultsCaseIgnored()
-
-            found = 'master'
-            if (len(values) > 0):
-                found = listResults.find_branch_by_partial(values[0])
-
-            self.action = self.action.format(grep='{0}..'.format(found))
-        else:
-            self.action = self.action.format(grep='')
-
-        if '-p' in options: #pretty
-            self.format = "--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'"
-        elif '-t' in options: #traces
-            self.format = '--graph'
-        elif '-d' in options: #diff
-            self.format = '--patch-with-stat'
-        elif '-o' in options: #oneline
-            self.format = '--oneline'
+        self.__map_command_flags_by_options_and_values_paired(options, values)
+        self.__map_command_flags_by_common_usage(options)
 
         if len(options) > 0 and regex.search('^-(\d+)', options[0]): #list
             self.target = options[0]
         else:
             self.target = ''
 
-        self.line = self.line.format(base=self.base, action=self.action, target=self.target, format=self.format)
+        self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
         return self.line
+
+    def __map_command_flags_by_options_and_values_paired(self, options: list, values: list):
+        if '-c' in options: #compare
+            listResults = ListResultsCaseIgnored()
+
+            compare_against = 'master'
+            if (len(values) > 0):
+                compare_against = listResults.find_branch_by_partial(values[0])
+
+            self.flags.append('{0}..'.format(compare_against))
+        elif len(values) > 0:
+            if '-a' in options: #author
+                self.flags.append('--author=\'{0}\''.format(values[0]))
+            elif '-g' in options: #grep
+                self.flags.append('-i --grep=\'{0}\''.format(values[0]))
+            elif '-e' in options: #exclude
+                self.flags.append('-i --grep=\'{0}\' --invert-grep'.format(values[0]))
+            else:
+                self.flags.append('-i --grep=\'{0}\''.format(values[0]))
+
+    def __map_command_flags_by_common_usage(self, options: list):
+        if '-p' in options: #pretty
+            self.flags.append("--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'")
+        elif '-d' in options: #diff
+            self.flags.append('--patch-with-stat')
+        elif '-o' in options: #oneline
+            self.flags.append('--oneline')
+
+        if '-m' in options: #no-merges
+            self.flags.append('--no-merges')
+
+        if '-r' in options: #roadmap
+            self.flags.append('--graph')
 
     @staticmethod
     def go(options: list = [], values: list = []):
