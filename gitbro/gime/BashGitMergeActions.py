@@ -16,7 +16,7 @@ class BashGitMergeActions:
         print(command)
         os.system(command)
 
-    def __map_command(self, options: list = [], values: list = []):
+    def __map_command(self, options: list, values: list) -> str:
         if len(options) > 0:
             self.__map_command_options(options)
 
@@ -24,7 +24,7 @@ class BashGitMergeActions:
 
         return self.line
 
-    def __map_command_options(self, options):
+    def __map_command_options(self, options: list) -> None:
         if '-a' in options: #abort
             self.target = '--abort'
         elif '-c' in options: #continue

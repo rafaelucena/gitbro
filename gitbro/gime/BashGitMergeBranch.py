@@ -20,7 +20,7 @@ class BashGitMergeBranch:
         print(command)
         os.system(command)
 
-    def __map_command(self, options: list = [], values: list = []):
+    def __map_command(self, options: list = [], values: list = []) -> str:
         if len(values) > 0:
             self.__map_command_values(values)
 
@@ -34,17 +34,17 @@ class BashGitMergeBranch:
 
         return self.line
 
-    def __confirm_just_in_case(self):
+    def __confirm_just_in_case(self) -> bool:
         answer = input(self.question.format(branch=self.target))
         if answer == 'y' or answer == 'Y':
             return True
 
         return False
 
-    def __map_command_values(self, values):
+    def __map_command_values(self, values: list) -> None:
         self.target = values[0]
 
-    def __map_command_options(self, options, values):
+    def __map_command_options(self, options: list, values: list) -> None:
         if '-l' == options[0] and len(values) == 0: #last
             self.target = self.__prepare_last_branch_value()
         elif '-g' == options[0]: #grep
@@ -52,9 +52,9 @@ class BashGitMergeBranch:
         elif '-m' == options[0]: #master
             self.target = 'master'
 
-        if '-r' in options: #read-only (skip editing commit)
+        if '-i' in options: #ignore (skip editing commit)
             self.flags.append('--no-edit')
-        elif '-w' in options: #write (skip editing commit)
+        elif '-e' in options: #edit
             self.flags.append('--edit')
 
         if '-s' in options: #stat
@@ -69,13 +69,13 @@ class BashGitMergeBranch:
         if '-n' in options: #no-verify (skip git hooks)
             self.flags.append('--no-verify')
 
-    def __prepare_last_branch_value(self):
+    def __prepare_last_branch_value(self) -> str:
         branchesList = ListResultsCaseIgnored()
         value = branchesList.find_last_branch_by_reflog()
 
         return value
 
-    def __prepare_grep_branch_value(self, values: list):
+    def __prepare_grep_branch_value(self, values: list) -> str:
         branchesList = ListResultsCaseIgnored()
         value = branchesList.find_first_branch_by_partial(values[0])
 
