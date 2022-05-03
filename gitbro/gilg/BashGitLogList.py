@@ -21,7 +21,7 @@ class BashGitLogList:
         self.__map_command_flags_by_options_and_values_paired(options, values)
         self.__map_command_flags_by_common_usage(options)
 
-        if len(options) > 0 and regex.search('^-(\d+)', options[0]): #list
+        if len(options) > 0 and regex.search(r'^-(\d+)', options[0]): #list
             self.target = options[0]
         else:
             self.target = ''
@@ -66,6 +66,9 @@ class BashGitLogList:
 
         if '-r' in options: #roadmap
             self.flags.append('--graph')
+
+        if '-z' in options: #no-verify
+            self.flags.append('--no-verify')
 
     @staticmethod
     def go(options: list = [], values: list = []):
