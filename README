@@ -80,6 +80,27 @@ $ gidf -s file_name
 $ gidf -s -c file_name
 ```
 
+## #gime - short for 'git merge'
+
+```bash
+## offers several merge options for quiet, no-edit, stat and a cool dry-run method ##
+
+# returns 'git merge last_branch_checked_out_from' |
+$ gime -l
+
+# returns 'git merge branch_name'
+$ gime branch_name
+
+# returns post merge action 'git merge --abort'
+$ gime -a
+
+# returns post merge action 'git merge --continue'
+$ gime -c
+
+# returns post merge action 'git merge --quit'
+$ gime -q
+```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 

@@ -1,3 +1,4 @@
+import re as regex
 import subprocess
 
 class ListResultsCaseIgnored:
@@ -19,7 +20,7 @@ class ListResultsCaseIgnored:
 
     def find_untracked_file_for_add(self, argument):
         self.search_list = subprocess.getoutput('git ls-files --others --exclude-standard')
-        return self.__prepare_case_insensitive_line_search(argument, self.search_list)
+        return self.__prepare_case_insensitive_line_search(self.search_list, argument)
 
     def find_stash_list_grouped(self, argument):
         self.search_list = subprocess.getoutput('git stash list')
@@ -28,6 +29,14 @@ class ListResultsCaseIgnored:
     def find_branch_by_partial(self, argument):
         self.search_list = subprocess.getoutput('git branch --no-contains')
         return self.__prepare_branch_line_search(self.search_list, argument)
+
+    def find_last_branch_by_reflog(self):
+        self.search_list = subprocess.getoutput("git reflog -1 --grep-reflog=checkout --pretty=format:'%gs'")
+        return self.__prepare_branch_reflog_line(self.search_list)
+
+    def find_first_branch_by_partial(self, argument):
+        self.search_list = subprocess.getoutput('git branch -l --no-contains')
+        return self.__prepare_case_insensitive_line_search(self.search_list, argument)
 
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.mapped_needles = {}
@@ -54,24 +63,24 @@ class ListResultsCaseIgnored:
 
         return argument
 
-    def __prepare_case_insensitive_line_search(self, argument, search_list):
+    def __prepare_case_insensitive_line_search(self, search_list, argument):
         output_lines = self.__prepare_case_insensitive_dictionary(search_list)
         for output_line in output_lines:
             tracked_argument_case_sensitive = output_line.rfind(argument)
             if tracked_argument_case_sensitive != -1:
                 return output_line
 
-            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument)
+            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument.lower())
             if tracked_argument_case_insensitive != -1:
                 return output_line
 
         return argument
 
-    def __prepare_case_insensitive_dictionary(self, output):
+    def __prepare_case_insensitive_dictionary(self, output: str) -> dict:
         self.parsed_lines = {}
 
         for output_line in output.splitlines():
-            self.parsed_lines[output_line] = output_line.lower()
+            self.parsed_lines[output_line.strip()] = output_line.lower().strip()
 
         return self.parsed_lines
 
@@ -117,3 +126,25 @@ class ListResultsCaseIgnored:
                 return output_line
 
         return argument
+
+    def __prepare_branch_reflog_line(self, search_list):
+        output_line = self.__prepare_reflog_list_case_insensitive_dictionary(search_list)
+        return output_line['source']
+
+    def __prepare_reflog_list_case_insensitive_dictionary(self, output):
+        self.parsed_lines = {}
+
+        reflog_line = []
+        for output_line in output.splitlines():
+            reflog_line = output_line.split(': ')
+            matched = regex.search('^moving from (.+) to (.+)$', reflog_line[1])
+
+            return  {
+                'acti': reflog_line[0],
+                'source': matched[1],
+                'source_lower': matched[1].lower(),
+                'destination': matched[2],
+                'destination_lower': matched[2].lower(),
+            }
+
+        return {}
