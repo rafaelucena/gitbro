@@ -29,7 +29,7 @@ setup(
 # giad - mostly done - planned: option to add only the first file matching a string
 # gibk - mostly done - planned: show a brief description of a stash when using the index as well
 # gilg - mostly done - planned: compare before/after, add by author
-# gime - sketch done
+# gime - mostly done
 # gicm
 # gicp - planned
 # girs - planned
