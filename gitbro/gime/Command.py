@@ -36,9 +36,9 @@ class Command:
     def __run_options_actions_flow(self, options):
         if options[0] == '-a': #abort
             return True
-        elif self.options[0] == '-c': #continue
+        elif options[0] == '-c': #continue
             return True
-        elif self.options[0] == '-q': #quit
+        elif options[0] == '-q': #quit
             return True
 
         return False
@@ -47,6 +47,7 @@ class Command:
         BashGitMergeBranch.go(self.options, self.values)
 
     def __run_default(self):
+        # TODO: define default for gime command
         print('default is not mapped (yet)')
 
 if __name__ == "__main__":
