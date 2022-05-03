@@ -20,7 +20,7 @@ class ListResultsCaseIgnored:
 
     def find_untracked_file_for_add(self, argument):
         self.search_list = subprocess.getoutput('git ls-files --others --exclude-standard')
-        return self.__prepare_case_insensitive_line_search(argument, self.search_list)
+        return self.__prepare_case_insensitive_line_search(self.search_list, argument)
 
     def find_stash_list_grouped(self, argument):
         self.search_list = subprocess.getoutput('git stash list')
@@ -33,6 +33,10 @@ class ListResultsCaseIgnored:
     def find_last_branch_by_reflog(self):
         self.search_list = subprocess.getoutput("git reflog -1 --grep-reflog=checkout --pretty=format:'%gs'")
         return self.__prepare_branch_reflog_line(self.search_list)
+
+    def find_first_branch_by_partial(self, argument):
+        self.search_list = subprocess.getoutput('git branch -l --no-contains')
+        return self.__prepare_case_insensitive_line_search(self.search_list, argument)
 
     def __prepare_case_insensitive_argument_search(self, argument, search_list):
         self.mapped_needles = {}
@@ -59,24 +63,24 @@ class ListResultsCaseIgnored:
 
         return argument
 
-    def __prepare_case_insensitive_line_search(self, argument, search_list):
+    def __prepare_case_insensitive_line_search(self, search_list, argument):
         output_lines = self.__prepare_case_insensitive_dictionary(search_list)
         for output_line in output_lines:
             tracked_argument_case_sensitive = output_line.rfind(argument)
             if tracked_argument_case_sensitive != -1:
                 return output_line
 
-            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument)
+            tracked_argument_case_insensitive = output_lines[output_line].rfind(argument.lower())
             if tracked_argument_case_insensitive != -1:
                 return output_line
 
         return argument
 
-    def __prepare_case_insensitive_dictionary(self, output):
+    def __prepare_case_insensitive_dictionary(self, output: str) -> dict:
         self.parsed_lines = {}
 
         for output_line in output.splitlines():
-            self.parsed_lines[output_line] = output_line.lower()
+            self.parsed_lines[output_line.strip()] = output_line.lower().strip()
 
         return self.parsed_lines
 
