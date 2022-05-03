@@ -52,13 +52,17 @@ class BashGitLogList:
     def __map_command_flags_by_common_usage(self, options: list):
         if '-p' in options: #pretty
             self.flags.append("--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'")
+        elif '-s' in options: #stat
+            self.flags.append('--stat')
         elif '-d' in options: #diff
             self.flags.append('--patch-with-stat')
         elif '-o' in options: #oneline
             self.flags.append('--oneline')
 
-        if '-m' in options: #no-merges
+        if '-n' in options: #no-merges
             self.flags.append('--no-merges')
+        elif '-m' in options: #merges
+            self.flags.append('--merges')
 
         if '-r' in options: #roadmap
             self.flags.append('--graph')
