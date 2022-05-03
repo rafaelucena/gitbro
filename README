@@ -1,0 +1,89 @@
+# GITBRO - Welcome
+
+Gitbro is a Python library for dealing with git commands.
+
+## Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+
+```bash
+pip install gitbro
+```
+
+## #gist - short for 'git status'
+
+```bash
+# returns 'git status'
+$ gist
+```
+
+## #giad - short for 'git add'
+```bash
+# returns 'git add .' but prompt the user
+$ giad
+
+# returns 'git add .' but prompt the user
+$ giad -a
+
+# returns 'git add file_with_full_path.etc' after tracking the file while case insensitive
+$ giad -n partial_name
+
+# returns 'git add --intent-to-add *READ*'
+$ giad -i partial_name
+
+# returns 'git add -u *partial_name*', adding only tracked files
+$ giad -m partial_name
+```
+
+
+## #gibr - short for 'git branch'
+
+```bash
+# returns 'git branch'
+$ gibr
+
+# returns 'git checkout different_branch_name'
+$ gibr different_branch_name
+
+# returns 'git checkout -b new_branch_name'
+$ gibr -n new_branch_name
+
+# returns 'git checkout -D delete_branch_name' BUT FIRST PROMPT THE USER
+$ gibr -d delete_branch_name
+
+# returns 'git push origin --delete kill_branch_name'
+$ gibr -k kill_branch_name
+```
+
+## #gidf - short for 'git diff'
+
+```bash
+# returns 'git diff HEAD --stat'
+$ gidf
+
+# returns 'git diff *file_name*'
+$ gidf file_name
+
+# returns 'git diff' | read -a as -all
+$ gidf -a
+
+# returns 'git diff --cached'
+$ gidf -c
+
+# returns 'git diff --cached *file_name*'
+$ gidf -c file_name
+
+# returns 'git diff --stat *file_name*'
+$ gidf -s file_name
+
+# returns 'git diff --stat --cached *file_name*'
+$ gidf -s -c file_name
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
