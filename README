@@ -91,13 +91,13 @@ $ gime -l
 # returns 'git merge branch_name'
 $ gime branch_name
 
-# returns 'git merge --abort'
+# returns post merge action 'git merge --abort'
 $ gime -a
 
-# returns 'git merge --continue'
+# returns post merge action 'git merge --continue'
 $ gime -c
 
-# returns 'git merge --quit'
+# returns post merge action 'git merge --quit'
 $ gime -q
 ```
 
