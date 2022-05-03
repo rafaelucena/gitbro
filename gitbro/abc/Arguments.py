@@ -1,10 +1,11 @@
 import re as regex
 import sys as system
+from typing import Any
 
 class Arguments:
     options: list = []
     values: list = []
-    matched: None
+    matched: Any
 
     def __init__(self) -> None:
         if (len(system.argv) <= 1):
@@ -26,25 +27,25 @@ class Arguments:
             else:
                 self.values.append(command_argument)
 
-    def __is_option(self, command_argument: str):
+    def __is_option(self, command_argument: str) -> bool:
         self.matched = regex.search('^-(\w+)', command_argument)
-        return self.matched
+        return type(self.matched) == regex.Match
 
     def __is_option_numeric(self, command_argument: str):
         self.matched = regex.search('^-(\d+)', command_argument)
         return self.matched
 
-    def get_options(self, index: int = None):
-        if (index is not None):
-            return self.options[index] if 0 <= index < len(self.options) else None
-
+    def get_options(self) -> list:
         return self.options
 
-    def get_values(self, index: int = None):
-        if (index is not None):
-            return self.values[index] if 0 <= index < len(self.values) else None
+    def get_option(self, index: int = 0) -> str:
+        return self.options[index] if 0 <= index < len(self.options) else ''
 
+    def get_values(self) -> list:
         return self.values
+
+    def get_value(self, index: int = 0) -> str:
+        return self.values[index] if 0 <= index < len(self.values) else ''
 
 if __name__ == "__main__":
     a = Arguments()
