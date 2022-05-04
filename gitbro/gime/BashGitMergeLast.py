@@ -2,7 +2,7 @@ import os
 
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
-class BashGitMergeBranch:
+class BashGitMergeLast:
     line: str = '{base} {action} {flags} {target}' # TODO: ":extras:"
     base: str = 'git'
     action: str = 'merge'
@@ -21,16 +21,9 @@ class BashGitMergeBranch:
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []) -> str:
-        if len(values) > 0:
-            self.__map_command_values(values)
-
         self.__map_command_options(options, values)
 
-        if '-m' in options: #master
-            self.target = 'master'
-        elif (len(options) == 0 and len(values) == 0):
-            self.target = 'master'
-
+        self.target = self.__prepare_last_branch_value()
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
         return self.line
@@ -41,9 +34,6 @@ class BashGitMergeBranch:
             return True
 
         return False
-
-    def __map_command_values(self, values: list) -> None:
-        self.target = values[0]
 
     def __map_command_options(self, options: list, values: list) -> None:
         if '-i' in options: #ignore (skip editing commit)
@@ -69,12 +59,6 @@ class BashGitMergeBranch:
 
         return value
 
-    def __prepare_grep_branch_value(self, values: list) -> str:
-        branchesList = ListResultsCaseIgnored()
-        value = branchesList.find_branch_by_partial(values[0])
-
-        return value
-
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitMergeBranch(options, values)
+        BashGitMergeLast(options, values)
