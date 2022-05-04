@@ -3,7 +3,7 @@ import re as regex
 
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
-class BashGitLogList:
+class BashGitLogCompare:
     line: str = '{base} {action} {flags} {target}' # TODO: ":extras:"
     base: str = 'git'
     action: str = 'log'
@@ -19,6 +19,14 @@ class BashGitLogList:
 
     def __map_command(self, options: list = [], values: list = []):
         self.__map_command_flags_by_common_usage(options)
+
+        listResults = ListResultsCaseIgnored()
+
+        compare_against = 'master'
+        if (len(values) > 0):
+            compare_against = listResults.find_branch_by_partial(values[0])
+
+        self.flags.append('{0}..'.format(compare_against))
 
         if len(options) > 0 and regex.search(r'^-(\d+)', options[0]): #list
             self.target = options[0]
@@ -49,4 +57,4 @@ class BashGitLogList:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitLogList(options, values)
+        BashGitLogCompare(options, values)

@@ -1,4 +1,7 @@
 from gitbro.abc.Arguments import Arguments
+from gitbro.gilg.BashGitLogAuthor import BashGitLogAuthor
+from gitbro.gilg.BashGitLogCompare import BashGitLogCompare
+from gitbro.gilg.BashGitLogGrep import BashGitLogGrep
 from gitbro.gilg.BashGitLogList import BashGitLogList
 
 class Command:
@@ -19,24 +22,19 @@ class Command:
             self.__run_default()
 
     def __run_options(self, options: list, values: list):
-        if self.__run_options_with_required_values(options):
-            if len(values) == 0:
-                print('You must give a partial value for the options -a, -g and -e')
-            else:
-                BashGitLogList.go(self.options, self.values)
+        if '-a' in options: #author
+            BashGitLogAuthor.go(options, values)
+        elif '-g' in options: #grep
+            BashGitLogGrep.go(options, values)
+        elif '-e' in options: #exclude
+            BashGitLogGrep.go(options, values)
+        elif '-c' in options: #exclude
+            BashGitLogCompare.go(options, values)
         else: # TODO: validate options
             BashGitLogList.go(self.options, self.values)
 
-    def __run_options_with_required_values(self, options: list):
-        if '-a' in options: #author
-            return True
-        elif '-g' in options: #grep
-            return True
-        elif '-e' in options: #exclude
-            return True
-
     def __run_values(self):
-        BashGitLogList.go(self.options, self.values)
+        BashGitLogGrep.go(self.options, self.values)
 
     def __run_default(self):
         BashGitLogList.go(self.options, self.values)

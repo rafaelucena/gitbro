@@ -1,9 +1,7 @@
 import os
 import re as regex
 
-from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
-
-class BashGitLogList:
+class BashGitLogAuthor:
     line: str = '{base} {action} {flags} {target}' # TODO: ":extras:"
     base: str = 'git'
     action: str = 'log'
@@ -11,6 +9,10 @@ class BashGitLogList:
     target: str = ''
 
     def __init__(self, options: list = [], values: list = []) -> None:
+        if len(values) == 0:
+            print('Missing a value for this command')
+            return
+
         command = self.__map_command(options, values)
 
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
@@ -19,6 +21,8 @@ class BashGitLogList:
 
     def __map_command(self, options: list = [], values: list = []):
         self.__map_command_flags_by_common_usage(options)
+
+        self.flags.append('--author=\'{0}\''.format(values[0]))
 
         if len(options) > 0 and regex.search(r'^-(\d+)', options[0]): #list
             self.target = options[0]
@@ -49,4 +53,4 @@ class BashGitLogList:
 
     @staticmethod
     def go(options: list = [], values: list = []):
-        BashGitLogList(options, values)
+        BashGitLogAuthor(options, values)
