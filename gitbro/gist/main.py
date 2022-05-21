@@ -1,8 +1,4 @@
-from gitbro.gist.Command import Command
-
-def run():
-    command = Command()
-    command.run()
+from gitbro.gist.BashGitStatus import BashGitStatus
 
 if __name__ == '__main__':
-    run()
+    BashGitStatus.go()
