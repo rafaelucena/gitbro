@@ -1,5 +1,6 @@
 import argparse
 from typing import Any
+import sys as system
 
 class ArgumentsParser():
     parser: Any = None
@@ -18,6 +19,9 @@ class ArgumentsParser():
                 self.parser.add_argument(option['abbrev'], option['name'], **option['key_parameters'], action='store_true')
 
         self.mapped, self.unmapped = self.parser.parse_known_args()
+
+    def is_any_argument(self):
+        return len(system.argv) > 1
 
     def get_mapped(self):
         return self.mapped
