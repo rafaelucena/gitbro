@@ -1,4 +1,5 @@
 import os
+from typing import Any
 from gitbro.abc.ArgumentsParser import ArgumentsParser
 from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
@@ -9,14 +10,18 @@ class BashGitStatus:
     flags: list = []
     target: str = ''
 
+    parser: Any
+
     options: list = [
-        {'abbrev': '-s', 'name': '-short', 'argument': False, 'key_parameters': {'help': 'short'}},
-        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'grep', 'metavar': 'partial_name', 'dest': 'partial'}},
+        {'abbrev': '-s', 'name': '-short', 'argument': False, 'key_parameters': {'help': 'short git status, the default here'}},
+        {'abbrev': '-l', 'name': '-long', 'argument': False, 'key_parameters': {'help': 'long git status, the default of the original command'}},
+        {'abbrev': '-b', 'name': '-branch', 'argument': False, 'key_parameters': {'help': 'show the branch even on short mode'}},
+        # {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'grep', 'metavar': 'partial_name', 'dest': 'partial'}},
     ]
 
     def __init__(self) -> None:
-        parser = ArgumentsParser(self.options)
-        command = self.__map_command(parser.get_mapped())
+        self.parser = ArgumentsParser(self.options)
+        command = self.__map_command(self.parser.get_mapped())
 
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
@@ -30,8 +35,16 @@ class BashGitStatus:
         return self.line
 
     def __map_command_options(self, options: list) -> None:
-        if options.s:
+        if self.parser.is_any_argument() == False:
             self.flags.append('--short')
+            self.flags.append('--branch')
+        elif options.s:
+            self.flags.append('--short')
+        elif options.l:
+            self.flags.append('--long')
+
+        if options.b:
+            self.flags.append('--branch')
 
     @staticmethod
     def go():

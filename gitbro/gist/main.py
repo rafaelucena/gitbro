@@ -1,4 +1,7 @@
 from gitbro.gist.BashGitStatus import BashGitStatus
 
-if __name__ == '__main__':
+def run():
     BashGitStatus.go()
+
+if __name__ == '__main__':
+    run()
