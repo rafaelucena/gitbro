@@ -21,6 +21,7 @@ class BashGitCommit:
         {'abbrev': '-m', 'name': '-message', 'argument': True, 'key_parameters': {'help': 'message for the commit', 'action': 'extend', 'metavar': 'commit_message', 'nargs': '+', 'type': str}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'ignore git hooks'}},
         {'abbrev': '-s', 'name': '-skip-message', 'argument': False, 'key_parameters': {'help': 'skip the interactive editor'}},
+        # {'abbrev': '-z', 'name': '-undo-commit', 'argument': False, 'key_parameters': {'help': 'undo|reset the last commit locally'}},
     ]
 
     def __init__(self) -> None:
@@ -33,37 +34,37 @@ class BashGitCommit:
         os.system(command)
 
     def __map_command(self, options: list) -> str:
-        self.__map_command_options(options)
         self.__map_command_value(options)
+        self.__map_command_options(options)
 
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
         return self.line
 
     def __map_command_options(self, options: list) -> None:
-        if options.f:
+        if self.parser.is_any_argument() == False:
+            return
+
+        if options.f: #fix
             self.flags.append('--amend')
             if options.s or options.e:
                 pass
             else:
                 self.flags.append('--no-edit')
-        elif options.l:
+        elif options.l: #last
             self.target = '-c HEAD'
-        elif options.m:
+        elif options.m: #message
             self.target = '-m \'' + ' '.join(options.m) + '\''
 
         if options.s: #skip
             self.flags.append('--no-edit')
         elif options.e: #edit
             self.flags.append('--edit')
-        # if self.parser.is_any_argument() == False:
-        #     self.flags.append('--short')
-        #     self.flags.append('--branch')
-        #     return
-        if options.d:
+
+        if options.d: #dry-run
             self.flags.append('--dry-run')
 
-        if options.n:
+        if options.n: #no-verify
             self.flags.append('--no-verify')
 
     def __map_command_value(self, options):
