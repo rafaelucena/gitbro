@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gitbro',
-    version='0.8.0',
+    version='0.10.0',
     description='A bunch of handy commands to do things a bit faster using git command line (imho)',
     url='http://github.com/rafaelucena/gitbro',
     author='Rafael Boszko',
@@ -19,6 +19,7 @@ setup(
             'gibk=gitbro.gibk.main:run',
             'gilg=gitbro.gilg.main:run',
             'gime=gitbro.gime.main:run',
+            'gicm=gitbro.gicm.main:run',
         ]
     )
 )
@@ -30,7 +31,7 @@ setup(
 # gibk - mostly done - planned: show a brief description of a stash when using the index as well
 # gilg - mostly done - planned: compare before/after, add by author
 # gime - mostly done
-# gicm
+# gicm - partially done
 # gicp - planned
 # girs - planned
 # gire - planned
