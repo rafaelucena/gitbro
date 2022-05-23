@@ -24,14 +24,14 @@ setup(
     )
 )
 
-# gist - sketch done
+# gist - mostly done
 # gibr - partially done - planned: return to last used branch, show merged, allow local alias listing
 # gidf - mostly done - planned: generating patch, applying it and comparing branches/commits
 # giad - mostly done - planned: option to add only the first file matching a string
 # gibk - mostly done - planned: show a brief description of a stash when using the index as well
 # gilg - mostly done - planned: compare before/after, add by author
 # gime - mostly done
-# gicm - partially done
+# gicm - mostly done
 # gicp - planned
 # girs - planned
 # gire - planned
