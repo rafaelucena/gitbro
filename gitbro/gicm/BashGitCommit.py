@@ -48,11 +48,13 @@ class BashGitCommit:
             else:
                 self.flags.append('--no-edit')
         elif options.l:
-            self.flags.append('-c HEAD')
+            self.target = '-c HEAD'
+        elif options.m:
+            self.target = '-m \'' + ' '.join(options.m) + '\''
 
-        if options.s:
+        if options.s: #skip
             self.flags.append('--no-edit')
-        elif options.e:
+        elif options.e: #edit
             self.flags.append('--edit')
         # if self.parser.is_any_argument() == False:
         #     self.flags.append('--short')
@@ -60,9 +62,6 @@ class BashGitCommit:
         #     return
         if options.d:
             self.flags.append('--dry-run')
-
-        if options.m:
-            self.target = '-m \'' + ' '.join(options.m) + '\''
 
         if options.n:
             self.flags.append('--no-verify')
