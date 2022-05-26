@@ -41,7 +41,7 @@ class BashGitMerge:
 
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
-        # os.system(command)
+        os.system(command)
 
     def __confirm_just_in_case(self) -> bool:
         answer = input(self.question)
