@@ -23,15 +23,12 @@ class BashGitMerge:
         {'abbrev': '-c', 'name': '-continue', 'argument': False, 'key_parameters': {'help': 'continue the merge'}},
         {'abbrev': '-d', 'name': '-dry-run', 'argument': False, 'key_parameters': {'help': 'merge the branch on a dry-run mode, without making commits'}},
         {'abbrev': '-e', 'name': '-edit-message', 'argument': False, 'key_parameters': {'help': 'edit the commit message'}},
+        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'partial name of the branch to merge', 'metavar': 'partial_branch_name', 'type': str}},
         {'abbrev': '-i', 'name': '-ignore-message', 'argument': False, 'key_parameters': {'help': 'ignore the commit message'}},
         {'abbrev': '-l', 'name': '-last', 'argument': False, 'key_parameters': {'help': 'merge the last branch'}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'skip git hooks'}},
         {'abbrev': '-q', 'name': '-quit', 'argument': False, 'key_parameters': {'help': 'quit the merge'}},
         {'abbrev': '-s', 'name': '-stat', 'argument': False, 'key_parameters': {'help': 'show the stat'}},
-        # {'abbrev': '-l', 'name': '-long', 'argument': False, 'key_parameters': {'help': 'long git status, the default of the original command'}},
-        # {'abbrev': '-b', 'name': '-branch', 'argument': False, 'key_parameters': {'help': 'show the branch even on short mode'}},
-        # {'abbrev': '-u', 'name': '-untracked', 'argument': False, 'key_parameters': {'help': 'see untracked files in the normal mode'}},
-        # {'abbrev': '-t', 'name': '-tracked', 'argument': False, 'key_parameters': {'help': 'see tracked files only'}},
     ]
 
     def __init__(self) -> None:
@@ -71,10 +68,15 @@ class BashGitMerge:
 
             return
 
-        if options.l: #last
+        if options.l or options.g:
             self.prompt = True
-            self.target = self.__prepare_last_branch_value()
-            self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
+
+            if options.l: #last
+                self.target = self.__prepare_last_branch_value()
+                self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
+            elif options.g: #grep
+                self.target = self.__prepare_grep_branch_value(options.g)
+                self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
 
         if options.i: #ignore (skip editing commit)
             self.flags.append('--no-edit')
@@ -97,6 +99,12 @@ class BashGitMerge:
     def __prepare_last_branch_value(self):
         branches_list = ListResultsCaseIgnored()
         value = branches_list.find_last_branch_by_reflog()
+
+        return value
+
+    def __prepare_grep_branch_value(self, partial_branch_name) -> str:
+        branchesList = ListResultsCaseIgnored()
+        value = branchesList.find_branch_by_partial(partial_branch_name)
 
         return value
 
