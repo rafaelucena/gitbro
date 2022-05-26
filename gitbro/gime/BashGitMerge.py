@@ -18,7 +18,7 @@ class BashGitMerge:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
-        # {'abbrev': '', 'name': 'partial_name', 'argument': None, 'key_parameters': {'help': 'partial name of the branch to merge'}},
+        {'abbrev': '', 'name': 'partial_branch_name', 'argument': None, 'key_parameters': {'help': 'partial name of the branch to merge'}},
         {'abbrev': '-a', 'name': '-abort', 'argument': False, 'key_parameters': {'help': 'abort the merge'}},
         {'abbrev': '-c', 'name': '-continue', 'argument': False, 'key_parameters': {'help': 'continue the merge'}},
         {'abbrev': '-d', 'name': '-dry-run', 'argument': False, 'key_parameters': {'help': 'merge the branch on a dry-run mode, without making commits'}},
@@ -26,6 +26,7 @@ class BashGitMerge:
         {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'partial name of the branch to merge', 'metavar': 'partial_branch_name', 'type': str}},
         {'abbrev': '-i', 'name': '-ignore-message', 'argument': False, 'key_parameters': {'help': 'ignore the commit message'}},
         {'abbrev': '-l', 'name': '-last', 'argument': False, 'key_parameters': {'help': 'merge the last branch'}},
+        {'abbrev': '-m', 'name': '-merge-master', 'argument': False, 'key_parameters': {'help': 'merge the master branch'}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'skip git hooks'}},
         {'abbrev': '-q', 'name': '-quit', 'argument': False, 'key_parameters': {'help': 'quit the merge'}},
         {'abbrev': '-s', 'name': '-stat', 'argument': False, 'key_parameters': {'help': 'show the stat'}},
@@ -50,7 +51,7 @@ class BashGitMerge:
         return False
 
     def __map_command(self, options: list) -> str:
-        # self.__map_command_value(options)
+        self.__map_command_value(options)
         self.__map_command_options(options)
 
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
@@ -68,15 +69,17 @@ class BashGitMerge:
 
             return
 
-        if options.l or options.g:
+        if options.l or options.g or options.m:
             self.prompt = True
 
             if options.l: #last
                 self.target = self.__prepare_last_branch_value()
-                self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
             elif options.g: #grep
                 self.target = self.__prepare_grep_branch_value(options.g)
-                self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
+            elif options.m: #master
+                self.target = 'master'
+
+            self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
 
         if options.i: #ignore (skip editing commit)
             self.flags.append('--no-edit')
@@ -94,7 +97,9 @@ class BashGitMerge:
             self.flags.append('--no-verify')
 
     def __map_command_value(self, options):
-        self.target = options.partial_name
+        if options.partial_branch_name:
+            branchesList = ListResultsCaseIgnored()
+            self.target = branchesList.find_branch_by_partial(options.partial_branch_name[0])
 
     def __prepare_last_branch_value(self):
         branches_list = ListResultsCaseIgnored()
