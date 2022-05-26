@@ -11,6 +11,9 @@ class BashGitMerge:
     flags: list = []
     target: str = ''
 
+    prompt: bool = False
+    question: str = ''
+
     parser: Any
 
     # TODO: implement exclusive group on arguments parsing
@@ -18,6 +21,7 @@ class BashGitMerge:
         # {'abbrev': '', 'name': 'partial_name', 'argument': None, 'key_parameters': {'help': 'partial name of the branch to merge'}},
         {'abbrev': '-a', 'name': '-abort', 'argument': False, 'key_parameters': {'help': 'abort the merge'}},
         {'abbrev': '-c', 'name': '-continue', 'argument': False, 'key_parameters': {'help': 'continue the merge'}},
+        {'abbrev': '-l', 'name': '-last', 'argument': False, 'key_parameters': {'help': 'merge the last branch'}},
         {'abbrev': '-q', 'name': '-quit', 'argument': False, 'key_parameters': {'help': 'quit the merge'}},
         # {'abbrev': '-s', 'name': '-short', 'argument': False, 'key_parameters': {'help': 'short git status, the default here'}},
         # {'abbrev': '-l', 'name': '-long', 'argument': False, 'key_parameters': {'help': 'long git status, the default of the original command'}},
@@ -30,9 +34,19 @@ class BashGitMerge:
         self.parser = ArgumentsParser(self.options)
         command = self.__map_command(self.parser.get_mapped())
 
+        if self.prompt and not self.__confirm_just_in_case():
+            return
+
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
         # os.system(command)
+
+    def __confirm_just_in_case(self) -> bool:
+        answer = input(self.question)
+        if answer == 'y' or answer == 'Y':
+            return True
+
+        return False
 
     def __map_command(self, options: list) -> str:
         # self.__map_command_value(options)
@@ -43,15 +57,29 @@ class BashGitMerge:
         return self.line
 
     def __map_command_options(self, options: list) -> None:
-        if options.a: #abort
-            self.target = '--abort'
-        elif options.c: #continue
-            self.target= '--continue'
-        elif options.q: #quit
-            self.target = '--quit'
+        if options.a or options.c or options.q:
+            if options.a: #abort
+                self.target = '--abort'
+            elif options.c: #continue
+                self.target= '--continue'
+            elif options.q: #quit
+                self.target = '--quit'
+
+            return
+
+        if options.l:
+            self.prompt = True
+            self.target = self.__prepare_last_branch_value()
+            self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
 
     def __map_command_value(self, options):
         self.target = options.partial_name
+
+    def __prepare_last_branch_value(self):
+        branches_list = ListResultsCaseIgnored()
+        value = branches_list.find_last_branch_by_reflog()
+
+        return value
 
     @staticmethod
     def go():
