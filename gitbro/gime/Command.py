@@ -1,5 +1,4 @@
 from gitbro.abc.Arguments import Arguments
-from gitbro.gime.BashGitMergeActions import BashGitMergeActions
 from gitbro.gime.BashGitMergeBranch import BashGitMergeBranch
 from gitbro.gime.BashGitMergeGrep import BashGitMergeGrep
 from gitbro.gime.BashGitMergeLast import BashGitMergeLast
@@ -22,9 +21,7 @@ class Command:
             self.__run_default(self.options, self.values)
 
     def __run_options(self, options: list, values: list) -> None:
-        if self.__run_options_actions_flow(options): #actions flow
-            BashGitMergeActions.go(options, values)
-        elif '-l' in options: #last
+        if '-l' in options: #last
             BashGitMergeLast.go(options, values)
         elif '-m' in options: #master
             BashGitMergeBranch.go(options, values)
@@ -40,16 +37,6 @@ class Command:
 
     def __run_default(self, options: list, values: list) -> None:
         BashGitMergeBranch.go(options, values) #master
-
-    def __run_options_actions_flow(self, options: list) -> bool:
-        if '-a' in options: #abort
-            return True
-        elif '-c' in options: #continue
-            return True
-        elif '-q' in options: #quit
-            return True
-
-        return False
 
 if __name__ == "__main__":
     command = Command()
