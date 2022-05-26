@@ -21,9 +21,13 @@ class BashGitMerge:
         # {'abbrev': '', 'name': 'partial_name', 'argument': None, 'key_parameters': {'help': 'partial name of the branch to merge'}},
         {'abbrev': '-a', 'name': '-abort', 'argument': False, 'key_parameters': {'help': 'abort the merge'}},
         {'abbrev': '-c', 'name': '-continue', 'argument': False, 'key_parameters': {'help': 'continue the merge'}},
+        {'abbrev': '-d', 'name': '-dry-run', 'argument': False, 'key_parameters': {'help': 'merge the branch on a dry-run mode, without making commits'}},
+        {'abbrev': '-e', 'name': '-edit-message', 'argument': False, 'key_parameters': {'help': 'edit the commit message'}},
+        {'abbrev': '-i', 'name': '-ignore-message', 'argument': False, 'key_parameters': {'help': 'ignore the commit message'}},
         {'abbrev': '-l', 'name': '-last', 'argument': False, 'key_parameters': {'help': 'merge the last branch'}},
+        {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'skip git hooks'}},
         {'abbrev': '-q', 'name': '-quit', 'argument': False, 'key_parameters': {'help': 'quit the merge'}},
-        # {'abbrev': '-s', 'name': '-short', 'argument': False, 'key_parameters': {'help': 'short git status, the default here'}},
+        {'abbrev': '-s', 'name': '-stat', 'argument': False, 'key_parameters': {'help': 'show the stat'}},
         # {'abbrev': '-l', 'name': '-long', 'argument': False, 'key_parameters': {'help': 'long git status, the default of the original command'}},
         # {'abbrev': '-b', 'name': '-branch', 'argument': False, 'key_parameters': {'help': 'show the branch even on short mode'}},
         # {'abbrev': '-u', 'name': '-untracked', 'argument': False, 'key_parameters': {'help': 'see untracked files in the normal mode'}},
@@ -67,10 +71,25 @@ class BashGitMerge:
 
             return
 
-        if options.l:
+        if options.l: #last
             self.prompt = True
             self.target = self.__prepare_last_branch_value()
             self.question = 'Are you sure you want to merge the branch ({branch}) into this one? (Yy|Nn)'.format(branch=self.target)
+
+        if options.i: #ignore (skip editing commit)
+            self.flags.append('--no-edit')
+        elif options.e: #edit
+            self.flags.append('--edit')
+
+        if options.s: #stat
+            self.flags.append('--stat')
+
+        if options.d: #dry-run
+            self.flags.append('--no-commit')
+            self.flags.append('--no-ff')
+
+        if options.n: #no-verify (skip git hooks)
+            self.flags.append('--no-verify')
 
     def __map_command_value(self, options):
         self.target = options.partial_name
