@@ -42,8 +42,6 @@ class BashGitStatus:
 
     def __map_command_options(self, options: list) -> None:
         if self.parser.is_any_argument() == False:
-            self.flags.append('--short')
-            self.flags.append('--branch')
             return
 
         if options.s:
