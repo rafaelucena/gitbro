@@ -20,11 +20,11 @@ class BashGitCommit:
         {'abbrev': '-d', 'name': '-dry-run', 'argument': False, 'key_parameters': {'help': 'dry-run the commit command'}},
         {'abbrev': '-e', 'name': '-edit-message', 'argument': False, 'key_parameters': {'help': 'edit the commit'}},
         {'abbrev': '-f', 'name': '-fix-commit', 'argument': False, 'key_parameters': {'help': 'amend|fix the last commit'}},
+        {'abbrev': '-i', 'name': '-ignore-message', 'argument': False, 'key_parameters': {'help': 'ignore the interactive editor'}},
         {'abbrev': '-l', 'name': '-last-commit', 'argument': False, 'key_parameters': {'help': 'use the last commit message'}},
         {'abbrev': '-m', 'name': '-message', 'argument': True, 'key_parameters': {'help': 'message for the commit', 'action': 'extend', 'metavar': 'commit_message', 'nargs': '+', 'type': str}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'ignore git hooks'}},
         {'abbrev': '-r', 'name': '-redo-commit', 'argument': False, 'key_parameters': {'help': 'restore the last commit locally'}},
-        {'abbrev': '-s', 'name': '-skip-message', 'argument': False, 'key_parameters': {'help': 'skip the interactive editor'}},
         {'abbrev': '-z', 'name': '-undo-commit', 'argument': False, 'key_parameters': {'help': 'undo|reset the last commit locally'}},
     ]
 
@@ -72,7 +72,7 @@ class BashGitCommit:
 
         if options.f: #fix
             self.flags.append('--amend')
-            if options.s or options.e:
+            if options.i or options.e:
                 pass
             else:
                 self.flags.append('--no-edit')
@@ -81,7 +81,7 @@ class BashGitCommit:
         elif options.m: #message
             self.target = '-m \'' + ' '.join(options.m) + '\''
 
-        if options.s: #skip
+        if options.i: #ignore
             self.flags.append('--no-edit')
         elif options.e: #edit
             self.flags.append('--edit')
