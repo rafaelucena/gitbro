@@ -33,6 +33,7 @@ setup(
 # gilg - mostly done - planned: compare before/after, add by author
 # gime - mostly done
 # gicm - mostly done
+# gipx - mostly done
 # gicp - planned
 # girs - planned
 # gire - planned
