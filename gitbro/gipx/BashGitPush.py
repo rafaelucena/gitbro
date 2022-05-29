@@ -33,7 +33,7 @@ class BashGitPush:
 
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
-        if and self.try_command(command) == False:
+        if self.try_command(command) == False:
             if self.prompt and self.__confirm_just_in_case():
                 self.run_suggested()
 
