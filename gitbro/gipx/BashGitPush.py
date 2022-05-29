@@ -20,6 +20,7 @@ class BashGitPush:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
+        {'abbrev': '-f', 'name': '-force', 'argument': False, 'key_parameters': {'help': 'force push (overwrite changes remotely)'}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'skip git hooks'}},
     ]
 
@@ -27,9 +28,12 @@ class BashGitPush:
         self.parser = ArgumentsParser(self.options)
         command = self.__map_command(self.parser.get_mapped())
 
+        if self.prompt and not self.__confirm_just_in_case():
+            return
+
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
-        if self.try_command(command) == False:
+        if and self.try_command(command) == False:
             if self.prompt and self.__confirm_just_in_case():
                 self.run_suggested()
 
@@ -70,7 +74,16 @@ class BashGitPush:
         return self.line
 
     def __map_command_options(self, options: list) -> None:
-        pass
+        if self.parser.is_any_argument() == False:
+            return
+
+        if options.f: #force
+            self.prompt = True
+            self.question = 'The --force option will overwrite everything you have remotely, are you sure about this? (Yy|Nn)'
+            self.flags.append('--force')
+
+        if options.n: #no-verify (skip git hooks)
+            self.flags.append('--no-verify')
 
     def __map_command_value(self, options):
         pass
