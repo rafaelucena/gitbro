@@ -22,6 +22,7 @@ class BashGitPush:
     options: list = [
         {'abbrev': '-f', 'name': '-force', 'argument': False, 'key_parameters': {'help': 'force push (overwrite changes remotely)'}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'skip git hooks'}},
+        {'abbrev': '-u', 'name': '-set-upstream', 'argument': True, 'key_parameters': {'help': 'set upstream branch', 'metavar': 'tailored_remote_branch_name', 'nargs': '?', 'default': False, 'type': str}},
     ]
 
     def __init__(self) -> None:
@@ -64,10 +65,8 @@ class BashGitPush:
 
         return False
 
-
     def __map_command(self, options: list) -> str:
         self.__map_command_options(options)
-        self.__map_command_value(options)
 
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
@@ -85,8 +84,15 @@ class BashGitPush:
         if options.n: #no-verify (skip git hooks)
             self.flags.append('--no-verify')
 
-    def __map_command_value(self, options):
-        pass
+        if options.u != False: #set-upstream
+            self.target = self.__set_upstream_target(options.u)
+            self.flags.append('--set-upstream origin')
+
+    def __set_upstream_target(self, option):
+        if option != None:
+            return option
+        else:
+            return subprocess.getoutput('git rev-parse --abbrev-ref HEAD')
 
     @staticmethod
     def go():
