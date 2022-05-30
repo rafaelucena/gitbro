@@ -15,6 +15,7 @@ class BashGitLog:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
+        {'abbrev': '-a', 'name': '-author', 'argument': True, 'key_parameters': {'help': 'compare the logs with a determined branch', 'metavar': 'commit_author', 'type': str}},
         {'abbrev': '-c', 'name': '-compare', 'argument': True, 'key_parameters': {'help': 'compare the logs with a determined branch', 'metavar': 'compare_against_branch', 'type': str}},
         {'abbrev': '-d', 'name': '-diff', 'argument': False, 'key_parameters': {'help': 'see the differences into the log --patch-with-stat'}},
         {'abbrev': '-e', 'name': '-exclude-grep', 'argument': True, 'key_parameters': {'help': 'ignore logs with --invert-grep --grep', 'metavar': 'partial_search', 'type': str}},
@@ -47,6 +48,9 @@ class BashGitLog:
     def __map_command_options(self, options: list) -> None:
         if self.parser.is_any_argument() == False:
             return
+
+        if options.a: #author
+            self.flags.append('--author=\'{0}\''.format(options.a))
 
         if options.c: #compare
             list_results = ListResultsCaseIgnored()
