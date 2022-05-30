@@ -15,6 +15,7 @@ class BashGitBranch:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
+        {'abbrev': '', 'name': 'branch_name', 'argument': None, 'key_parameters': {'help': 'name of the branch to checkout to'}},
         {'abbrev': '-b', 'name': '-branches', 'argument': False, 'key_parameters': {'help': 'list local branches'}},
         {'abbrev': '-n', 'name': '-new-branch', 'argument': True, 'key_parameters': {'help': 'checkout to a new branch', 'metavar': 'new_branch_name', 'type': str}},
         {'abbrev': '-r', 'name': '-remote-branches', 'argument': False, 'key_parameters': {'help': 'list remote branches'}},
@@ -37,6 +38,9 @@ class BashGitBranch:
         return self.line
 
     def __map_command_options(self, options: list) -> None:
+        if options.branch_name != False:
+            return
+
         if self.parser.is_any_argument() == False:
             self.flags.append('-l')
             return
@@ -54,7 +58,9 @@ class BashGitBranch:
             self.flags.append('-r')
 
     def __map_command_value(self, options):
-        pass
+        if options.branch_name:
+            self.action = 'checkout'
+            self.target = options.branch_name[0]
 
     @staticmethod
     def go():
