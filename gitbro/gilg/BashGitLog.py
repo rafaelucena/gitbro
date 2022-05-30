@@ -15,6 +15,8 @@ class BashGitLog:
     # TODO: implement exclusive group on arguments parsing
     options: list = [
         {'abbrev': '-d', 'name': '-diff', 'argument': False, 'key_parameters': {'help': 'see the differences into the log --patch-with-stat'}},
+        {'abbrev': '-e', 'name': '-exclude-grep', 'argument': True, 'key_parameters': {'help': 'ignore logs with --invert-grep --grep'}},
+        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'track logs with --grep'}},
         {'abbrev': '-n', 'name': '-no-merges', 'argument': False, 'key_parameters': {'help': 'see the log without merges, --no-merges'}},
         {'abbrev': '-m', 'name': '-merges', 'argument': False, 'key_parameters': {'help': 'see the log of merges only, --merges'}},
         {'abbrev': '-o', 'name': '-oneline', 'argument': False, 'key_parameters': {'help': 'see the log with a --oneline'}},
@@ -44,7 +46,10 @@ class BashGitLog:
         if self.parser.is_any_argument() == False:
             return
 
-        print(options)
+        if options.g:
+            self.flags.append('-i --grep=\'{0}\''.format(options.g))
+        elif options.e:
+            self.flags.append('-i --grep=\'{0}\' --invert-grep'.format(options.e))
 
         if options.p: #pretty
             self.flags.append("--pretty=format:'%C(yellow)%h%Creset|%C(red)%ad%Creset|%C(yellow)%an%Creset:%s' --date=format:'%Y-%m-%d %H:%M:%S'")
@@ -70,6 +75,11 @@ class BashGitLog:
         for unmapped_option in unmapped_options:
             if self.target == '' and regex.search(r'^-(\d+)$', unmapped_option):
                 self.target = unmapped_option
+
+    @staticmethod
+    def __non_numeric_type(arg_value, pattern=regex.compile(r"^-[0-9]+$")):
+        if not pattern.match(arg_value):
+            return arg_value
 
     @staticmethod
     def go():
