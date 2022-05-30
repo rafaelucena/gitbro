@@ -1,8 +1,7 @@
-from gitbro.gibr.Command import Command
+from gitbro.gibr.BashGitBranch import BashGitBranch
 
 def run():
-    command = Command()
-    command.run()
+    BashGitBranch.go()
 
 if __name__ == '__main__':
     run()
