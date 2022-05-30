@@ -2,7 +2,6 @@ from gitbro.abc.Arguments import Arguments
 from gitbro.gibr.BashGitBranchDelete import BashGitBranchDelete
 from gitbro.gibr.BashGitBranchKill import BashGitBranchKill
 from gitbro.gibr.BashGitBranchList import BashGitBranchList
-from gitbro.gibr.BashGitBranchNew import BashGitBranchNew
 from gitbro.gibr.BashGitBranchSet import BashGitBranchSet
 
 class Command:
@@ -23,9 +22,7 @@ class Command:
             self.__run_default()
 
     def __run_options(self):
-        if self.options[0] == '-n':
-            BashGitBranchNew.go(self.options, self.values)
-        elif self.options[0] == '-d':
+        if self.options[0] == '-d':
             BashGitBranchDelete.go(self.options, self.values)
         elif self.options[0] == '-k':
             BashGitBranchKill.go(self.options, self.values)
