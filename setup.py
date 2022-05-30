@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gitbro',
-    version='0.11.0',
+    version='0.13.0',
     description='A bunch of handy commands to do things a bit faster using git command line (imho)',
     url='http://github.com/rafaelucena/gitbro',
     author='Rafael Boszko',
