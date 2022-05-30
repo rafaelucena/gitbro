@@ -1,6 +1,4 @@
 from gitbro.abc.Arguments import Arguments
-from gitbro.gibr.BashGitBranchDelete import BashGitBranchDelete
-from gitbro.gibr.BashGitBranchKill import BashGitBranchKill
 
 class Command:
     options: list = []
@@ -16,11 +14,7 @@ class Command:
             self.__run_options()
 
     def __run_options(self):
-        if self.options[0] == '-d':
-            BashGitBranchDelete.go(self.options, self.values)
-        elif self.options[0] == '-k':
-            BashGitBranchKill.go(self.options, self.values)
-        elif self.options[0] == '-g':
+        if self.options[0] == '-g':
             print('track a branch by a partial string')
         elif self.options[0] == '-r':
             print('track the last used branch and return to it')
