@@ -16,14 +16,14 @@ class BashGitDiffFile:
 
         # @todo - colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
-        # os.system(command)
+        os.system(command)
 
     def __map_command(self, options: list = [], values: list = []) -> str:
-        if len(values) > 0:
-            self.__map_command_values(values)
-
         if len(options) > 0:
             self.__map_command_options(options, values)
+
+        if len(values) > 0:
+            self.__map_command_values(options, values)
 
         if (len(options) == 0 and len(values) == 0):
             self.flags.append('HEAD')
@@ -33,24 +33,23 @@ class BashGitDiffFile:
 
         return self.line
 
-    def __map_command_values(self, values: list) -> None:
+    def __map_command_values(self, options: list, values: list) -> None:
         self.target = self.__prepare_common_diff_value(values[0])
 
+        if len(options) > 0:
+            if '-a' in options: #all
+                self.target = self.__prepare_common_diff_value(values[0])
+            elif '-q' in options: #queued
+                self.target = self.__prepare_queued_diff_value(values[0])
+
     def __map_command_options(self, options: list, values: list):
-        print('what now')
-    # def __map_command_(self, options: list = [], values: list = []):
-    #     if len(options) > 0 and options[0] == '-c':
-    #         self.action = self.action.format(cached='--cached')
-    #         if len(values) > 0:
-    #             self.target = self.__prepare_queued_diff_value(values[0])
-    #     else:
-    #         self.action = self.action.format(cached='')
-    #         if len(values) > 0:
-    #             self.target = self.__prepare_common_diff_value(values[0])
+        if '-a' in options: #all
+            self.flags = []
+        elif '-q' in options: #queued
+            self.flags.append('--cached')
 
-    #     self.line = self.line.format(base=self.base, action=self.action, target=self.target)
-
-    #     return self.line
+        if '-s' in options: #stat
+            self.flags.append('--stat')
 
     def __prepare_common_diff_value(self, value):
         filesList = ListResultsCaseIgnored()
@@ -66,7 +65,7 @@ class BashGitDiffFile:
 
     def __prepare_value_wildcards(self, value):
         target_value = ''
-        if regex.search('\.\w?$', value):
+        if regex.search(r'\.\w?$', value):
             target_value = '*{file_name}'.format(file_name=value)
         else:
             target_value = '*{file_name}*'.format(file_name=value)
