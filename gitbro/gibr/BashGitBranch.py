@@ -20,6 +20,7 @@ class BashGitBranch:
         {'abbrev': '', 'name': 'branch_name', 'argument': None, 'key_parameters': {'help': 'name of the branch to checkout to'}},
         {'abbrev': '-b', 'name': '-branches', 'argument': False, 'key_parameters': {'help': 'list local branches'}},
         {'abbrev': '-d', 'name': '-delete-branch', 'argument': True, 'key_parameters': {'help': 'delete a local branch', 'metavar': 'branch_name', 'type': str}},
+        {'abbrev': '-g', 'name': '-grep-branch', 'argument': True, 'key_parameters': {'help': 'partial name of the branch to checkout', 'metavar': 'partial_branch_name', 'type': str}},
         {'abbrev': '-l', 'name': '-last-branch', 'argument': False, 'key_parameters': {'help': 'checkout to the last used branch'}},
         {'abbrev': '-n', 'name': '-new-branch', 'argument': True, 'key_parameters': {'help': 'checkout to a new branch', 'metavar': 'new_branch_name', 'type': str}},
         {'abbrev': '-r', 'name': '-remote-branches', 'argument': False, 'key_parameters': {'help': 'list remote branches'}},
@@ -60,12 +61,16 @@ class BashGitBranch:
             self.flags.append('-l')
             return
 
-        if options.d or options.l or options.n:
+        if options.d or options.l or options.n or options.g:
             self.action = 'checkout'
 
             if options.n: #new-branch
                 self.flags.append('-b')
                 self.target = options.n
+            elif options.l: #last-branch
+                self.target = '-'
+            elif options.g: #grep-branch
+                self.target = self.__prepare_grep_branch_value(options.g)
             elif options.d: #delete-branch
                 self.prompt = True
                 self.flags.append('-D')
@@ -77,8 +82,6 @@ class BashGitBranch:
             #     self.flags.append('--delete')
             #     self.target = options.t
             #     self.question = 'Are you certain you want to delete {target} remotely (THIS ACTION CANNOT BE UNDONE)? (Yy|Nn)'.format(target=options.t)
-            elif options.l: #last-branch
-                self.target = '-'
 
             return
 
@@ -92,6 +95,12 @@ class BashGitBranch:
         if options.branch_name:
             self.action = 'checkout'
             self.target = options.branch_name[0]
+
+    def __prepare_grep_branch_value(self, partial_branch_name) -> str:
+        branchesList = ListResultsCaseIgnored()
+        value = branchesList.find_branch_by_partial(partial_branch_name)
+
+        return value
 
     @staticmethod
     def go():
