@@ -2,6 +2,7 @@ import os
 import re as regex
 from typing import Any
 from gitbro.abc.ArgumentsParser import ArgumentsParser
+from gitbro.abc.ListResultsCaseIgnored import ListResultsCaseIgnored
 
 class BashGitLog:
     line: str = '{base} {action} {flags} {target}' # TODO: ":extras:"
@@ -14,9 +15,10 @@ class BashGitLog:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
+        {'abbrev': '-c', 'name': '-compare', 'argument': True, 'key_parameters': {'help': 'compare the logs with a determined branch', 'metavar': 'compare_against_branch', 'type': str}},
         {'abbrev': '-d', 'name': '-diff', 'argument': False, 'key_parameters': {'help': 'see the differences into the log --patch-with-stat'}},
-        {'abbrev': '-e', 'name': '-exclude-grep', 'argument': True, 'key_parameters': {'help': 'ignore logs with --invert-grep --grep'}},
-        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'track logs with --grep'}},
+        {'abbrev': '-e', 'name': '-exclude-grep', 'argument': True, 'key_parameters': {'help': 'ignore logs with --invert-grep --grep', 'metavar': 'partial_search', 'type': str}},
+        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'track logs with --grep', 'metavar': 'partial_search', 'type': str}},
         {'abbrev': '-n', 'name': '-no-merges', 'argument': False, 'key_parameters': {'help': 'see the log without merges, --no-merges'}},
         {'abbrev': '-m', 'name': '-merges', 'argument': False, 'key_parameters': {'help': 'see the log of merges only, --merges'}},
         {'abbrev': '-o', 'name': '-oneline', 'argument': False, 'key_parameters': {'help': 'see the log with a --oneline'}},
@@ -46,9 +48,14 @@ class BashGitLog:
         if self.parser.is_any_argument() == False:
             return
 
-        if options.g:
+        if options.c: #compare
+            list_results = ListResultsCaseIgnored()
+            compare_against = list_results.find_branch_by_partial(options.c)
+            self.flags.append('{0}..'.format(compare_against))
+
+        if options.g: #grep
             self.flags.append('-i --grep=\'{0}\''.format(options.g))
-        elif options.e:
+        elif options.e: #exclude-grep
             self.flags.append('-i --grep=\'{0}\' --invert-grep'.format(options.e))
 
         if options.p: #pretty
