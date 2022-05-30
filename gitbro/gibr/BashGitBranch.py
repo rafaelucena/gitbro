@@ -17,6 +17,7 @@ class BashGitBranch:
     options: list = [
         {'abbrev': '', 'name': 'branch_name', 'argument': None, 'key_parameters': {'help': 'name of the branch to checkout to'}},
         {'abbrev': '-b', 'name': '-branches', 'argument': False, 'key_parameters': {'help': 'list local branches'}},
+        {'abbrev': '-l', 'name': '-last-branch', 'argument': False, 'key_parameters': {'help': 'checkout to the last used branch'}},
         {'abbrev': '-n', 'name': '-new-branch', 'argument': True, 'key_parameters': {'help': 'checkout to a new branch', 'metavar': 'new_branch_name', 'type': str}},
         {'abbrev': '-r', 'name': '-remote-branches', 'argument': False, 'key_parameters': {'help': 'list remote branches'}},
     ]
@@ -45,10 +46,15 @@ class BashGitBranch:
             self.flags.append('-l')
             return
 
-        if options.n: #new-branch
+        if options.n or options.l:
             self.action = 'checkout'
-            self.flags.append('-b')
-            self.target = options.n
+
+            if options.n: #new-branch
+                self.flags.append('-b')
+                self.target = options.n
+            elif options.l: #last-branch
+                self.target = '-'
+
             return
 
         if options.b: #branches
