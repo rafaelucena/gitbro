@@ -17,8 +17,7 @@ class BashGitMergeActions:
         os.system(command)
 
     def __map_command(self, options: list, values: list) -> str:
-        if len(options) > 0:
-            self.__map_command_options(options)
+        self.__map_command_options(options)
 
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
