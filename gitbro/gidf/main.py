@@ -1,8 +1,7 @@
-from gitbro.gidf.Command import Command
+from gitbro.gidf.BashGitDiff import BashGitDiff
 
 def run():
-    command = Command()
-    command.run()
+    BashGitDiff.go()
 
 if __name__ == '__main__':
     run()

@@ -1,5 +1,6 @@
 import argparse
 from typing import Any
+import re as regex
 import sys as system
 
 class ArgumentsParser():
@@ -30,3 +31,8 @@ class ArgumentsParser():
 
     def get_unmapped(self):
         return self.unmapped
+
+    @staticmethod
+    def __non_numeric_type(arg_value, pattern=regex.compile(r"^-[0-9]+$")):
+        if not pattern.match(arg_value):
+            return arg_value

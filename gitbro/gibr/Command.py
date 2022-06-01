@@ -29,6 +29,8 @@ class Command:
             BashGitBranchDelete.go(self.options, self.values)
         elif self.options[0] == '-k':
             BashGitBranchKill.go(self.options, self.values)
+        elif self.options[0] == '-l':
+            BashGitBranchList.go(self.options, self.values)
         elif self.options[0] == '-g':
             print('track a branch by a partial string')
         elif self.options[0] == '-r':
