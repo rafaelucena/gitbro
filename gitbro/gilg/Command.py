@@ -1,6 +1,7 @@
-import re as regex
-
 from gitbro.abc.Arguments import Arguments
+from gitbro.gilg.BashGitLogAuthor import BashGitLogAuthor
+from gitbro.gilg.BashGitLogCompare import BashGitLogCompare
+from gitbro.gilg.BashGitLogGrep import BashGitLogGrep
 from gitbro.gilg.BashGitLogList import BashGitLogList
 
 class Command:
@@ -14,37 +15,29 @@ class Command:
 
     def run(self):
         if len(self.options) > 0:
-            self.__run_options()
+            self.__run_options(self.options, self.values)
         elif len(self.values) > 0:
             self.__run_values()
         else:
             self.__run_default()
 
-    def __run_options(self):
-        if regex.search('^-(\d+)', self.options[0]): #list
+    def __run_options(self, options: list, values: list):
+        if '-a' in options: #author
+            BashGitLogAuthor.go(options, values)
+        elif '-g' in options: #grep
+            BashGitLogGrep.go(options, values)
+        elif '-e' in options: #exclude
+            BashGitLogGrep.go(options, values)
+        elif '-c' in options: #exclude
+            BashGitLogCompare.go(options, values)
+        else: # TODO: validate options
             BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-c': #compare
-            BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-p': #pretty
-            BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-g': #grep
-            BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-e': #exclude
-            BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-t': #traces
-            BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-d': #diff
-            BashGitLogList.go(self.options, self.values)
-        elif self.options[0] == '-o': #diff
-            BashGitLogList.go(self.options, self.values)
-        else:
-            print('this option is not mapped (yet)')
 
     def __run_values(self):
-        BashGitLogList.go(self.options, self.values)
+        BashGitLogGrep.go(self.options, self.values)
 
     def __run_default(self):
-        print('default is not mapped (yet)')
+        BashGitLogList.go(self.options, self.values)
 
 if __name__ == "__main__":
     command = Command()
