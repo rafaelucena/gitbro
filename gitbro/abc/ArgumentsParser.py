@@ -14,7 +14,7 @@ class ArgumentsParser():
     def map_options(self, options):
         for option in options:
             if option['argument'] == None:
-                self.parser.add_argument(option['name'], nargs='?', default=False, **option['key_parameters'])
+                self.parser.add_argument(option['name'], nargs='*', default=False, **option['key_parameters'])
             elif option['argument'] == True:
                 self.parser.add_argument(option['abbrev'], option['name'], **option['key_parameters'])
             else:
