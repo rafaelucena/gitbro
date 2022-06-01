@@ -1,7 +1,8 @@
-from gitbro.gilg.BashGitLog import BashGitLog
+from gitbro.gilg.Command import Command
 
 def run():
-    BashGitLog.go()
+    command = Command()
+    command.run()
 
 if __name__ == '__main__':
     run()
