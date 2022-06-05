@@ -17,15 +17,15 @@ class BashGitCommit:
     # TODO: implement exclusive group on arguments parsing
     options: list = [
         {'abbrev': '', 'name': 'commit_message', 'argument': None, 'key_parameters': {'help': 'message for the commit', 'type': str}},
+        {'abbrev': '-a', 'name': '-amend', 'argument': False, 'key_parameters': {'help': 'amend the last commit'}},
         {'abbrev': '-d', 'name': '-dry-run', 'argument': False, 'key_parameters': {'help': 'dry-run the commit command'}},
         {'abbrev': '-e', 'name': '-edit-message', 'argument': False, 'key_parameters': {'help': 'edit the commit'}},
-        {'abbrev': '-f', 'name': '-fix-commit', 'argument': False, 'key_parameters': {'help': 'amend|fix the last commit'}},
         {'abbrev': '-i', 'name': '-ignore-message', 'argument': False, 'key_parameters': {'help': 'ignore the interactive editor'}},
-        {'abbrev': '-l', 'name': '-last-commit', 'argument': False, 'key_parameters': {'help': 'use the last commit message'}},
         {'abbrev': '-m', 'name': '-message', 'argument': True, 'key_parameters': {'help': 'message for the commit', 'action': 'extend', 'metavar': 'commit_message', 'nargs': '+', 'type': str}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'ignore git hooks'}},
-        {'abbrev': '-r', 'name': '-redo-commit', 'argument': False, 'key_parameters': {'help': 'restore the last commit locally'}},
-        {'abbrev': '-z', 'name': '-undo-commit', 'argument': False, 'key_parameters': {'help': 'undo|reset the last commit locally'}},
+        {'abbrev': '-p', 'name': '-previous', 'argument': False, 'key_parameters': {'help': 'use the previous commit message'}},
+        {'abbrev': '-r', 'name': '-redo', 'argument': False, 'key_parameters': {'help': 'restore the last commit locally'}},
+        {'abbrev': '-z', 'name': '-undo', 'argument': False, 'key_parameters': {'help': 'undo|reset the last commit locally'}},
     ]
 
     def __init__(self) -> None:
@@ -70,13 +70,13 @@ class BashGitCommit:
 
             return
 
-        if options.f: #fix
+        if options.a: #fix
             self.flags.append('--amend')
             if options.i or options.e:
                 pass
             else:
                 self.flags.append('--no-edit')
-        elif options.l: #last
+        elif options.p: #previous
             self.target = '-c HEAD'
         elif options.m: #message
             self.target = '-m \'' + ' '.join(options.m) + '\''
