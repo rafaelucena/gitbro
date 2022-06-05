@@ -25,9 +25,9 @@ class BashGitMerge:
         {'abbrev': '-e', 'name': '-edit-message', 'argument': False, 'key_parameters': {'help': 'edit the commit message'}},
         {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'partial name of the branch to merge', 'metavar': 'partial_branch_name', 'type': str}},
         {'abbrev': '-i', 'name': '-ignore-message', 'argument': False, 'key_parameters': {'help': 'ignore the commit message'}},
-        {'abbrev': '-l', 'name': '-last', 'argument': False, 'key_parameters': {'help': 'merge the last branch'}},
         {'abbrev': '-m', 'name': '-merge-master', 'argument': False, 'key_parameters': {'help': 'merge the master branch'}},
         {'abbrev': '-n', 'name': '-no-verify', 'argument': False, 'key_parameters': {'help': 'skip git hooks'}},
+        {'abbrev': '-p', 'name': '-previous', 'argument': False, 'key_parameters': {'help': 'merge the previous branch'}},
         {'abbrev': '-q', 'name': '-quit', 'argument': False, 'key_parameters': {'help': 'quit the merge'}},
         {'abbrev': '-s', 'name': '-stat', 'argument': False, 'key_parameters': {'help': 'show the stat'}},
     ]
@@ -69,11 +69,11 @@ class BashGitMerge:
 
             return
 
-        if options.l or options.g or options.m:
+        if options.p or options.g or options.m:
             self.prompt = True
 
-            if options.l: #last
-                self.target = self.__prepare_last_branch_value()
+            if options.p: #previous
+                self.target = self.__prepare_previous_branch_value()
             elif options.g: #grep
                 self.target = self.__prepare_grep_branch_value(options.g)
             elif options.m: #master
@@ -101,7 +101,7 @@ class BashGitMerge:
             branchesList = ListResultsCaseIgnored()
             self.target = branchesList.find_branch_by_partial(options.partial_branch_name[0])
 
-    def __prepare_last_branch_value(self):
+    def __prepare_previous_branch_value(self):
         branches_list = ListResultsCaseIgnored()
         value = branches_list.find_last_branch_by_reflog()
 
