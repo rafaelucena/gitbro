@@ -18,12 +18,12 @@ class BashGitBranch:
     # TODO: implement exclusive group on arguments parsing
     options: list = [
         {'abbrev': '', 'name': 'branch_name', 'argument': None, 'key_parameters': {'help': 'name of the branch to checkout to'}},
-        {'abbrev': '-b', 'name': '-branches', 'argument': False, 'key_parameters': {'help': 'list local branches'}},
-        {'abbrev': '-d', 'name': '-delete-branch', 'argument': True, 'key_parameters': {'help': 'delete a local branch', 'metavar': 'branch_name', 'type': str}},
-        {'abbrev': '-g', 'name': '-grep-branch', 'argument': True, 'key_parameters': {'help': 'partial name of the branch to checkout', 'metavar': 'partial_branch_name', 'type': str}},
-        {'abbrev': '-l', 'name': '-last-branch', 'argument': False, 'key_parameters': {'help': 'checkout to the last used branch'}},
-        {'abbrev': '-n', 'name': '-new-branch', 'argument': True, 'key_parameters': {'help': 'checkout to a new branch', 'metavar': 'new_branch_name', 'type': str}},
-        {'abbrev': '-r', 'name': '-remote-branches', 'argument': False, 'key_parameters': {'help': 'list remote branches'}},
+        {'abbrev': '-l', 'name': '-list', 'argument': False, 'key_parameters': {'help': 'list local branches'}},
+        {'abbrev': '-d', 'name': '-delete', 'argument': True, 'key_parameters': {'help': 'delete a local branch', 'metavar': 'branch_name', 'type': str}},
+        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'partial name of the branch to checkout', 'metavar': 'partial_branch_name', 'type': str}},
+        {'abbrev': '-p', 'name': '-previous', 'argument': False, 'key_parameters': {'help': 'checkout to the previous used branch'}},
+        {'abbrev': '-n', 'name': '-new', 'argument': True, 'key_parameters': {'help': 'checkout to a new branch', 'metavar': 'new_branch_name', 'type': str}},
+        {'abbrev': '-r', 'name': '-remotes', 'argument': False, 'key_parameters': {'help': 'list remote branches'}},
         # {'abbrev': '-t', 'name': '-terminate-branch', 'argument': True, 'key_parameters': {'help': 'delete a branch REMOTELY', 'metavar': 'branch_name', 'type': str}},
     ]
 
@@ -61,17 +61,17 @@ class BashGitBranch:
             self.flags.append('-l')
             return
 
-        if options.d or options.l or options.n or options.g:
+        if options.d or options.p or options.n or options.g:
             self.action = 'checkout'
 
-            if options.n: #new-branch
+            if options.n: #new
                 self.flags.append('-b')
                 self.target = options.n
-            elif options.l: #last-branch
-                self.target = '-'
-            elif options.g: #grep-branch
+            elif options.p: #previous
+                self.target = self.__prepare_previous_branch_value()
+            elif options.g: #grep
                 self.target = self.__prepare_grep_branch_value(options.g)
-            elif options.d: #delete-branch
+            elif options.d: #delete
                 self.prompt = True
                 self.flags.append('-D')
                 self.target = options.d
@@ -85,7 +85,7 @@ class BashGitBranch:
 
             return
 
-        if options.b: #branches
+        if options.l: #list
             self.flags.append('-l')
 
         if options.r: #remote-branches
@@ -99,6 +99,12 @@ class BashGitBranch:
     def __prepare_grep_branch_value(self, partial_branch_name) -> str:
         branchesList = ListResultsCaseIgnored()
         value = branchesList.find_branch_by_partial(partial_branch_name)
+
+        return value
+
+    def __prepare_previous_branch_value(self):
+        branches_list = ListResultsCaseIgnored()
+        value = branches_list.find_last_branch_by_reflog()
 
         return value
 
