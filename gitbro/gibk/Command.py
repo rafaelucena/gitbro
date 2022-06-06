@@ -1,7 +1,6 @@
 from gitbro.abc.Arguments import Arguments
 from gitbro.gibk.BashGitStashBoom import BashGitStashBoom
 from gitbro.gibk.BashGitStashDrop import BashGitStashDrop
-from gitbro.gibk.BashGitStashPop import BashGitStashPop
 
 class Command:
     options: list = []
@@ -21,8 +20,6 @@ class Command:
             BashGitStashBoom.go(self.options, self.values)
         elif self.options[0] == '-d': #drop
             BashGitStashDrop.go(self.options, self.values)
-        elif self.options[0] == '-p': #pop
-            BashGitStashPop.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
 
