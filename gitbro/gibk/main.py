@@ -1,8 +1,7 @@
-from gitbro.gibk.Command import Command
+from gitbro.gibk.BashGitStash import BashGitStash
 
 def run():
-    command = Command()
-    command.run()
+    BashGitStash.go()
 
 if __name__ == '__main__':
     run()
