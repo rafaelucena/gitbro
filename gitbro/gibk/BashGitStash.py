@@ -17,8 +17,9 @@ class BashGitStash:
     # TODO: implement exclusive group on arguments parsing
     options: list = [
         {'abbrev': '', 'name': 'stash_index', 'argument': None, 'key_parameters': {'help': 'index of the stash to target'}},
+        {'abbrev': '-a', 'name': '-apply', 'argument': True, 'key_parameters': {'help': 'apply a stash', 'metavar': 'stash_index', 'nargs': '?', 'default': False, 'type': str}},
         {'abbrev': '-l', 'name': '-list', 'argument': False, 'key_parameters': {'help': 'list all the stashes, with a relative date when they were created'}},
-        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'locate a stash by the message'}},
+        {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'locate a stash by the message', 'metavar': 'stash_message'}},
         {'abbrev': '-s', 'name': '-show', 'argument': True, 'key_parameters': {'help': 'view a stash with -stat (default)', 'metavar': 'stash_index', 'nargs': '?', 'default': False, 'type': str}},
         {'abbrev': '-v', 'name': '-view', 'argument': True, 'key_parameters': {'help': 'view a stash with -patch', 'metavar': 'stash_index', 'nargs': '?', 'default': False, 'type': str}},
     ]
@@ -44,17 +45,20 @@ class BashGitStash:
             self.flags.append('--pretty=format:"%gd: %C(green)(%cr)%C(reset): %s"')
             return
 
-        if options.s != False or options.v != False:
+        if options.s != False or options.v != False: #show|view
             self.flags.append('show')
 
-            if options.v != False:
+            if options.v != False: #view
                 self.flags.append('-p')
 
-            if options.s != False and options.s != None:
-                self.target = 'stash@{{{index}}}'.format(index=options.s)
+            if self.__map_command_option_if_present(options.s):
                 return
-            elif options.v != False and options.v != None:
-                self.target = 'stash@{{{index}}}'.format(index=options.v)
+            elif self.__map_command_option_if_present(options.v):
+                return
+        elif options.a != False: #apply
+            self.flags.append('apply')
+
+            if self.__map_command_option_if_present(options.a):
                 return
 
         if options.stash_index:
@@ -62,7 +66,7 @@ class BashGitStash:
                 self.flags.append('show')
 
             self.target = 'stash@{{{index}}}'.format(index=options.stash_index[0])
-        elif options.g:
+        elif options.g: #grep
             if len(self.flags) == 0:
                 self.flags.append('show')
 
@@ -73,6 +77,13 @@ class BashGitStash:
                 return
             self.target = stashed_item['stash']
             self.comment = '#{branch}: {message}'.format(branch=stashed_item['branch'], message=stashed_item['message'])
+
+    def __map_command_option_if_present(self, option):
+        if option != False and option != None:
+            self.target = 'stash@{{{index}}}'.format(index=option)
+            return True
+
+        return False
 
     @staticmethod
     def go():
