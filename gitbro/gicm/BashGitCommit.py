@@ -70,12 +70,12 @@ class BashGitCommit:
 
             return
 
-        if options.a: #fix
+        if options.a: #amend
             self.flags.append('--amend')
             if options.i or options.e:
                 pass
             else:
-                self.flags.append('--no-edit')
+                self.flags.append('--no-edit') # TODO: detect if there aren't any files present before setting the --no-edit as default
         elif options.p: #previous
             self.target = '-c HEAD'
         elif options.m: #message
