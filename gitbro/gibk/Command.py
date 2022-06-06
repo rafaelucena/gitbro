@@ -1,5 +1,4 @@
 from gitbro.abc.Arguments import Arguments
-from gitbro.gibk.BashGitStashBoom import BashGitStashBoom
 from gitbro.gibk.BashGitStashDrop import BashGitStashDrop
 
 class Command:
@@ -16,9 +15,7 @@ class Command:
             self.__run_options()
 
     def __run_options(self):
-        if self.options[0] == '-c': #clear
-            BashGitStashBoom.go(self.options, self.values)
-        elif self.options[0] == '-d': #drop
+        if self.options[0] == '-d': #drop
             BashGitStashDrop.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')

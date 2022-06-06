@@ -13,11 +13,14 @@ class BashGitStash:
     comment: str = ''
 
     parser: Any
+    prompt: bool = False
+    question: str = ''
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
         {'abbrev': '', 'name': 'stash_index', 'argument': None, 'key_parameters': {'help': 'index of the stash to target'}},
         {'abbrev': '-a', 'name': '-apply', 'argument': True, 'key_parameters': {'help': 'apply a stash', 'metavar': 'stash_index', 'nargs': '?', 'default': False, 'type': str}},
+        {'abbrev': '-c', 'name': '-clear', 'argument': False, 'key_parameters': {'help': 'clear all the stashes'}},
         {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'locate a stash by the message', 'metavar': 'stash_message'}},
         {'abbrev': '-l', 'name': '-list', 'argument': False, 'key_parameters': {'help': 'list all the stashes, with a relative date when they were created'}},
         {'abbrev': '-n', 'name': '-new', 'argument': True, 'key_parameters': {'help': 'push the local changes into a new stash', 'metavar': 'stash_message', 'nargs': '?', 'default': False, 'type': str}},
@@ -30,9 +33,19 @@ class BashGitStash:
         self.parser = ArgumentsParser(self.options)
         command = self.__map_command(self.parser.get_mapped())
 
+        if self.prompt and not self.__confirm_just_in_case():
+            return
+
         # TODO: colorful print - print('{0} {1} {2}'.format('\033[32mgit', self.action, 'option'))
         print(command)
-        # os.system(command)
+        os.system(command)
+
+    def __confirm_just_in_case(self):
+        answer = input(self.question)
+        if answer == 'y' or answer == 'Y':
+            return True
+
+        return False
 
     def __map_command(self, options: list) -> str:
         self.__map_command_options(options)
@@ -55,6 +68,12 @@ class BashGitStash:
                 self.target = options.n
 
             return
+        elif options.c:
+            self.flags.append('clear')
+
+            self.prompt = True
+            # TODO: get amount of stashes before printing
+            self.question = 'Are you sure you want to delete all the stashes? (Yy|Nn)'
         elif options.s != False or options.v != False: #show|view
             self.flags.append('show')
 
