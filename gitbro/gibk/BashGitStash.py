@@ -21,6 +21,7 @@ class BashGitStash:
         {'abbrev': '', 'name': 'stash_index', 'argument': None, 'key_parameters': {'help': 'index of the stash to target'}},
         {'abbrev': '-a', 'name': '-apply', 'argument': True, 'key_parameters': {'help': 'apply a stash', 'metavar': 'stash_index', 'nargs': '?', 'default': False, 'type': str}},
         {'abbrev': '-c', 'name': '-clear', 'argument': False, 'key_parameters': {'help': 'clear all the stashes'}},
+        {'abbrev': '-d', 'name': '-drop', 'argument': True, 'key_parameters': {'help': 'drop a stash', 'metavar': 'stash_index', 'nargs': '?', 'default': False, 'type': str}},
         {'abbrev': '-g', 'name': '-grep', 'argument': True, 'key_parameters': {'help': 'locate a stash by the message', 'metavar': 'stash_message'}},
         {'abbrev': '-l', 'name': '-list', 'argument': False, 'key_parameters': {'help': 'list all the stashes, with a relative date when they were created'}},
         {'abbrev': '-n', 'name': '-new', 'argument': True, 'key_parameters': {'help': 'push the local changes into a new stash', 'metavar': 'stash_message', 'nargs': '?', 'default': False, 'type': str}},
@@ -69,11 +70,21 @@ class BashGitStash:
 
             return
         elif options.c:
-            self.flags.append('clear')
-
             self.prompt = True
             # TODO: get amount of stashes before printing
             self.question = 'Are you sure you want to delete all the stashes? (Yy|Nn)'
+
+            self.flags.append('clear')
+            return
+        elif options.d != False:
+            self.prompt = True
+            # TODO: tailor the question to the stash expected to be dropped
+            self.question = 'Are you sure you want to drop the stash? (Yy|Nn)'
+
+            self.flags.append('drop')
+
+            if self.__map_command_option_if_present(options.d):
+                return
         elif options.s != False or options.v != False: #show|view
             self.flags.append('show')
 
