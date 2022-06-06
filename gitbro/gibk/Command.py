@@ -2,7 +2,6 @@ from gitbro.abc.Arguments import Arguments
 from gitbro.gibk.BashGitStashApply import BashGitStashApply
 from gitbro.gibk.BashGitStashBoom import BashGitStashBoom
 from gitbro.gibk.BashGitStashDrop import BashGitStashDrop
-from gitbro.gibk.BashGitStashList import BashGitStashList
 from gitbro.gibk.BashGitStashPop import BashGitStashPop
 from gitbro.gibk.BashGitStashPush import BashGitStashPush
 from gitbro.gibk.BashGitStashView import BashGitStashView
@@ -21,8 +20,6 @@ class Command:
             self.__run_options()
         elif len(self.values) > 0:
             self.__run_values()
-        else:
-            self.__run_default()
 
     def __run_options(self):
         if self.options[0] == '-n': #new|push
@@ -33,8 +30,6 @@ class Command:
             BashGitStashDrop.go(self.options, self.values)
         elif self.options[0] == '-a': #apply
             BashGitStashApply.go(self.options, self.values)
-        elif self.options[0] == '-l': #list
-            BashGitStashList.go(self.options, self.values)
         elif self.options[0] == '-p': #pop
             BashGitStashPop.go(self.options, self.values)
         elif self.options[0] == '-g': #grep
@@ -48,9 +43,6 @@ class Command:
 
     def __run_values(self):
         BashGitStashApply.go(self.options, self.values)
-
-    def __run_default(self):
-        BashGitStashList.go(self.options, self.values)
 
 if __name__ == "__main__":
     command = Command()

@@ -15,6 +15,7 @@ class BashGitStash:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
+        {'abbrev': '-l', 'name': '-list', 'argument': False, 'key_parameters': {'help': 'list all the stashes, with a relative date when they were created'}},
     ]
 
     def __init__(self) -> None:
@@ -26,11 +27,16 @@ class BashGitStash:
         os.system(command)
 
     def __map_command(self, options: list) -> str:
-        self.flags.append('list')
+        self.__map_command_options(options)
 
         self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
 
         return self.line
+
+    def __map_command_options(self, options: list) -> None:
+        if options.l or self.parser.is_any_argument() == False: #list
+            self.flags.append('list')
+            self.flags.append('--pretty=format:"%gd: %C(green)(%cr)%C(reset): %s:"')
 
     @staticmethod
     def go():
