@@ -16,6 +16,8 @@ class BashGitAdd:
     # TODO: implement exclusive group on arguments parsing
     options: list = [
         {'abbrev': '', 'name': 'partial_file_name', 'argument': None, 'key_parameters': {'help': 'partial name of the file to add'}},
+        {'abbrev': '-m', 'name': '-modified', 'argument': False, 'key_parameters': {'help': 'add only updated/tracked files'}},
+        {'abbrev': '-u', 'name': '-update', 'argument': False, 'key_parameters': {'help': 'add only updated/tracked files'}},
     ]
 
     def __init__(self) -> None:
@@ -35,7 +37,8 @@ class BashGitAdd:
         return self.line
 
     def __map_command_options(self, options: list) -> None:
-        pass
+        if options.m or options.u: #modified
+            self.flags.append('-u')
 
     def __map_command_value(self, options):
         if not options.partial_file_name:

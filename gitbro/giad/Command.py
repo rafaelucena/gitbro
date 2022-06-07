@@ -1,6 +1,5 @@
 from gitbro.abc.Arguments import Arguments
 from gitbro.giad.BashGitAddAllFiles import BashGitAddAllFiles
-from gitbro.giad.BashGitAddChangedFile import BashGitAddChangedFile
 from gitbro.giad.BashGitAddNewFile import BashGitAddNewFile
 
 class Command:
@@ -25,8 +24,6 @@ class Command:
             BashGitAddNewFile.go(self.options, self.values)
         elif self.options[0] == '-i':
             BashGitAddNewFile.go(self.options, self.values)
-        elif self.options[0] == '-m':
-            BashGitAddChangedFile.go(self.options, self.values)
         else:
             print('this option is not mapped (yet)')
 
