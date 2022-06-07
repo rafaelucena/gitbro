@@ -17,7 +17,9 @@ class BashGitAdd:
     options: list = [
         {'abbrev': '', 'name': 'partial_file_name', 'argument': None, 'key_parameters': {'help': 'partial name of the file to add'}},
         {'abbrev': '-a', 'name': '-all', 'argument': False, 'key_parameters': {'help': 'add all files'}},
+        {'abbrev': '-i', 'name': '-intent', 'argument': True, 'key_parameters': {'help': 'add files with --intent-to-add', 'metavar': 'partial_file_name', 'type': str}},
         {'abbrev': '-m', 'name': '-modified', 'argument': False, 'key_parameters': {'help': 'add only updated/tracked files'}},
+        {'abbrev': '-n', 'name': '-new', 'argument': True, 'key_parameters': {'help': 'add new files', 'metavar': 'partial_file_name', 'type': str}},
         {'abbrev': '-u', 'name': '-update', 'argument': False, 'key_parameters': {'help': 'add only updated/tracked files'}},
     ]
 
@@ -42,6 +44,11 @@ class BashGitAdd:
             self.flags.append('--all')
         elif options.m or options.u: #modified
             self.flags.append('-u')
+        elif options.n: #new
+            self.target = self.__prepare_untracked_file(options.n)
+        elif options.i: #intent
+            self.flags.append('--intent-to-add')
+            self.target = self.__prepare_untracked_match(options.i)
 
     def __map_command_value(self, options):
         if not options.partial_file_name:
@@ -55,6 +62,18 @@ class BashGitAdd:
 
         if original_value == updated_value:
             updated_value = filesList.find_untracked_files_for_add(original_value)
+
+        return self.__prepare_value_wildcards(updated_value)
+
+    def __prepare_untracked_file(self, original_value):
+        filesList = ListResultsCaseIgnored()
+        output_line = filesList.find_untracked_file_for_add(original_value)
+
+        return output_line
+
+    def __prepare_untracked_match(self, original_value):
+        filesList = ListResultsCaseIgnored()
+        updated_value = filesList.find_untracked_files_for_add(original_value)
 
         return self.__prepare_value_wildcards(updated_value)
 
