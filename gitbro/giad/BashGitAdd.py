@@ -15,7 +15,7 @@ class BashGitAdd:
 
     # TODO: implement exclusive group on arguments parsing
     options: list = [
-        {'abbrev': '', 'name': 'partial_file_name', 'argument': None, 'key_parameters': {'help': 'partial name of the file to diff'}},
+        {'abbrev': '', 'name': 'partial_file_name', 'argument': None, 'key_parameters': {'help': 'partial name of the file to add'}},
     ]
 
     def __init__(self) -> None:
@@ -43,22 +43,14 @@ class BashGitAdd:
 
         self.target = self.__prepare_common_diff_value(options.partial_file_name[0])
 
-        if options.a: #all
-            self.target = self.__prepare_common_diff_value(options.partial_file_name[0])
-        elif options.q: #queued|staged
-            self.target = self.__prepare_queued_diff_value(options.partial_file_name[0])
-
-    def __prepare_common_diff_value(self, value):
+    def __prepare_common_diff_value(self, original_value):
         filesList = ListResultsCaseIgnored()
-        value = filesList.find_changed_files_for_diff(value)
+        updated_value = filesList.find_changed_files_for_diff(original_value)
 
-        return self.__prepare_value_wildcards(value)
+        if original_value == updated_value:
+            updated_value = filesList.find_untracked_files_for_add(original_value)
 
-    def __prepare_queued_diff_value(self, value):
-        filesList = ListResultsCaseIgnored()
-        value = filesList.find_queued_files_for_diff(value)
-
-        return self.__prepare_value_wildcards(value)
+        return self.__prepare_value_wildcards(updated_value)
 
     def __prepare_value_wildcards(self, value):
         target_value = ''
