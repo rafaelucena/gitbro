@@ -75,14 +75,17 @@ class BashGitPull:
         if self.parser.is_any_argument() == False:
             return
 
+        if options.branch_name:
+            self.target = options.branch_name[0]
+            self.flags.append('origin')
+        elif options.u != False: #set-upstream
+            self.target = self.__set_upstream_target(options.u)
+            self.flags.append('--set-upstream origin')
+
         if options.f: #force
             self.prompt = True
             self.question = 'The --force option will/might overwrite everything you have locally, are you sure about this? (Yy|Nn)'
             self.flags.append('--force')
-
-        if options.u != False: #set-upstream
-            self.target = self.__set_upstream_target(options.u)
-            self.flags.append('--set-upstream origin')
 
     def __set_upstream_target(self, option):
         if option != None:
