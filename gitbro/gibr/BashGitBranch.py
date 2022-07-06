@@ -61,7 +61,7 @@ class BashGitBranch:
             self.flags.append('-l')
             return
 
-        if options.d or options.p or options.n or options.g:
+        if options.p or options.n or options.g:
             self.action = 'checkout'
 
             if options.n: #new
@@ -71,18 +71,18 @@ class BashGitBranch:
                 self.target = self.__prepare_previous_branch_value()
             elif options.g: #grep
                 self.target = self.__prepare_grep_branch_value(options.g)
-            elif options.d: #delete
-                self.prompt = True
-                self.flags.append('-D')
-                self.target = options.d
-                self.question = 'Are you sure you want to delete the local {target}? (Yy|Nn)'.format(target=options.d)
             # elif options.t: #terminate
             #     self.prompt = True
             #     self.action = 'push origin'
             #     self.flags.append('--delete')
             #     self.target = options.t
             #     self.question = 'Are you certain you want to delete {target} remotely (THIS ACTION CANNOT BE UNDONE)? (Yy|Nn)'.format(target=options.t)
-
+            return
+        elif options.d: #delete
+            self.prompt = True
+            self.flags.append('-d')
+            self.target = options.d
+            self.question = 'Are you sure you want to delete the local {target}? (Yy|Nn)'.format(target=options.d)
             return
 
         if options.l: #list
