@@ -51,7 +51,13 @@ class BashGitStash:
     def __map_command(self, options: list) -> str:
         self.__map_command_options(options)
 
-        self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target, comment=self.comment)
+        self.line = ' '.join(part for part in [
+            self.base,
+            self.action,
+            ' '.join(self.flags),
+            self.target,
+            self.comment,
+        ] if part)
 
         return self.line
 

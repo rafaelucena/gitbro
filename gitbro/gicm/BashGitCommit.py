@@ -50,7 +50,12 @@ class BashGitCommit:
         self.__map_command_value(options)
         self.__map_command_options(options)
 
-        self.line = self.line.format(base=self.base, action=self.action, flags=' '.join(self.flags), target=self.target)
+        self.line = ' '.join(part for part in [
+            self.base,
+            self.action,
+            ' '.join(self.flags),
+            self.target,
+        ] if part)
 
         return self.line
 

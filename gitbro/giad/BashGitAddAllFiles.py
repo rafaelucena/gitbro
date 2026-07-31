@@ -20,7 +20,11 @@ class BashGitAddAllFiles:
         os.system(command)
 
     def __map_command(self, options: list = [], values: list = []):
-        self.line = self.line.format(base=self.base, action=self.action, target=self.target)
+        self.line = ' '.join(part for part in [
+            self.base,
+            self.action,
+            self.target,
+        ] if part)
 
         return self.line
 

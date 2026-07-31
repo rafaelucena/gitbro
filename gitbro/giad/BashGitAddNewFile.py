@@ -24,7 +24,11 @@ class BashGitAddNewFile:
             self.action = self.action.format(intent='')
             self.target = self.__prepare_untracked_file(values[0])
 
-        self.line = self.line.format(base=self.base, action=self.action, target=self.target)
+        self.line = ' '.join(part for part in [
+            self.base,
+            self.action,
+            self.target,
+        ] if part)
 
         return self.line
 
