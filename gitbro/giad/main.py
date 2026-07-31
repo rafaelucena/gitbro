@@ -1,8 +1,7 @@
-from gitbro.giad.Command import Command
+from gitbro.giad.BashGitAdd import BashGitAdd
 
 def run():
-    command = Command()
-    command.run()
+    BashGitAdd.go()
 
 if __name__ == '__main__':
     run()
